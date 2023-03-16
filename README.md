@@ -13,5 +13,5 @@ The aim of this project is to control a robot arm using a Beckhoff PLC controlle
 - The robot arm has to pick up objects on a virtual conveyer belt
 - The digital twin will send the location, size and characteristics of the object to the Robot
 
-### Beckhoff PLS software nodes
+### Beckhoff PLC software nodes
 - 
