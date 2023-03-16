@@ -13,5 +13,6 @@ The aim of this project is to control a robot arm using a Beckhoff PLC controlle
 - The robot arm has to pick up objects on a virtual conveyer belt
 - The digital twin will send the location, size and characteristics of the object to the Robot
 
-### Beckhoff PLC software nodes
-- 
+### Questions for Mr. Figaroa (Oswald)
+- What axact PLC are we going to work with
+- Are there any suggestions on what software to use
