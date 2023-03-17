@@ -12,4 +12,4 @@
 
 5. Use Structured Text to program the PLC
 
-6. No hard minimum, just try to get as far as possible
+6. No hard minimum, just try to get as far as far as possible
