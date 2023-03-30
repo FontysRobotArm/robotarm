@@ -1,0 +1,16 @@
+C:\CPR\02_Produkte\09_CPRog\OpenSourceDemo\CPRMoverDemo\MoverDemo\bin\Debug\MoverDemo.exe.config
+C:\CPR\02_Produkte\09_CPRog\OpenSourceDemo\CPRMoverDemo\MoverDemo\bin\Debug\MoverDemo.exe
+C:\CPR\02_Produkte\09_CPRog\OpenSourceDemo\CPRMoverDemo\MoverDemo\bin\Debug\MoverDemo.pdb
+C:\CPR\02_Produkte\09_CPRog\OpenSourceDemo\CPRMoverDemo\MoverDemo\obj\Debug\MoverDemo.csprojResolveAssemblyReference.cache
+C:\CPR\02_Produkte\09_CPRog\OpenSourceDemo\CPRMoverDemo\MoverDemo\obj\Debug\MoverDemo.Form1.resources
+C:\CPR\02_Produkte\09_CPRog\OpenSourceDemo\CPRMoverDemo\MoverDemo\obj\Debug\MoverDemo.Properties.Resources.resources
+C:\CPR\02_Produkte\09_CPRog\OpenSourceDemo\CPRMoverDemo\MoverDemo\obj\Debug\MoverDemo.csproj.GenerateResource.Cache
+C:\CPR\02_Produkte\09_CPRog\OpenSourceDemo\CPRMoverDemo\MoverDemo\obj\Debug\MoverDemo.exe
+C:\CPR\02_Produkte\09_CPRog\OpenSourceDemo\CPRMoverDemo\MoverDemo\obj\Debug\MoverDemo.pdb
+C:\CPR\02_Produkte\09_CPRog\OpenSourceDemo\CPRMoverDemo\MoverDemo\bin\Debug\Multimedia.dll
+C:\Users\Rik06\git\Semester4\ProjectBestanden\Documents from the Previous Project Group\Files from Oswald\CPRMoverDemoCSharp\CPRMoverDemo\MoverDemo\obj\Debug\MoverDemo.csproj.AssemblyReference.cache
+C:\Users\Rik06\git\Semester4\ProjectBestanden\Documents from the Previous Project Group\Files from Oswald\CPRMoverDemoCSharp\CPRMoverDemo\MoverDemo\obj\Debug\MoverDemo.csproj.SuggestedBindingRedirects.cache
+C:\Users\Rik06\git\Semester4\ProjectBestanden\Documents from the Previous Project Group\Files from Oswald\CPRMoverDemoCSharp\CPRMoverDemo\MoverDemo\obj\Debug\MoverDemo.exe
+C:\Users\Rik06\git\Semester4\ProjectBestanden\Documents from the Previous Project Group\Files from Oswald\CPRMoverDemoCSharp\CPRMoverDemo\MoverDemo\obj\Debug\MoverDemo.pdb
+C:\Users\Rik06\git\Semester4\ProjectBestanden\Documents from the Previous Project Group\Files from Oswald\CPRMoverDemoCSharp\CPRMoverDemo\MoverDemo\obj\Debug\MoverDemo.Properties.Resources.resources
+C:\Users\Rik06\git\Semester4\ProjectBestanden\Documents from the Previous Project Group\Files from Oswald\CPRMoverDemoCSharp\CPRMoverDemo\MoverDemo\obj\Debug\MoverDemo.csproj.GenerateResource.cache
