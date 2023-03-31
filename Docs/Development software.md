@@ -4,7 +4,9 @@
 
 [TwinCAT course playlist](https://youtube.com/playlist?list=PLimaF0nZKYHz3I3kFP4myaAYjmYk1SowO)
 
-## TwinCat software nodes
+[CPR mover demo (Ethernet)](https://github.com/CommonplaceRobotics/CRI-DemoClient)
+
+## TwinCat software notes
 - POU's (Program Organizational Unit) -- Program all functions, programs and all general code here.
 - GVL's (Global Variable Library) -- set all variables in here.
 - DUT's (Data Unit Types) -- create all new structures and types here.
