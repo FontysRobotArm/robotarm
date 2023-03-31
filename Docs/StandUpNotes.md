@@ -14,8 +14,9 @@ Luuk: Familiarizing with TwinCAT.<br>
 Rik: Familiarizing with TwinCAT.<br>
 Jorn: Searching for possible software for visualisation.<br>
 
-
-Dimitar: -
-Luuk: -
-Rik: -
-Jorn: -
+## 31.03.2023
+As group: Try to get the robot arm to work with work of previous group.<br>
+Dimitar: Familiarizing with TwinCAT.<br>
+Luuk: Familiarizing with TwinCAT.<br>
+Rik: Familiarizing with TwinCAT.<br>
+Jorn: Searching for possible software for visualisation.<br>
