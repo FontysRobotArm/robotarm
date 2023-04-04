@@ -80,3 +80,13 @@ SDO (Service Data Object) - the thing that provides direct access to the server'
 SDO server - the object whose data is accessed<br>
 SDO client - the object that grabs the data<br>
 Transfer is started by client
+
+PDO (Process Data Object) - the data object, the data that is actually transmitted
+
+The arm uses Event driven CANopen, therefore if a message does not arrive in time, a watchdog is triggered and an error state is engaged.
+- Maybe Synchronized CANopen communication can be used, so as to send the SYNC telegram and avoid the error state?
+
+
+Usually, in CAN, you receive the response from the previous message when you send a new message. Is it the case with CANopen as well?
+
+[Bosch CANopen article](https://infosys.beckhoff.com/english.php?content=../content/1033/tcsystemmanager/1092789003.html&id=7873477876248720016)
