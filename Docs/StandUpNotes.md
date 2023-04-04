@@ -20,3 +20,10 @@ Dimitar: Familiarizing with TwinCAT.<br>
 Luuk: Familiarizing with TwinCAT.<br>
 Rik: Familiarizing with TwinCAT.<br>
 Jorn: Searching for possible software for visualisation.<br>
+
+## 04.04.2023
+As group: -<br>
+Dimitar: Research for CanOPEN communication.<br>
+Luuk: Called in sick.<br>
+Rik: Research for CanOPEN communication.<br>
+Jorn: Create documentation for choice.<br>
