@@ -26,4 +26,11 @@ As group: -<br>
 Dimitar: Research for CanOPEN communication.<br>
 Luuk: Called in sick.<br>
 Rik: Research for CanOPEN communication.<br>
-Jorn: Create documentation for choice.<br>
+Jorn: Create documentation for choice of visualisation tool.<br>
+
+## 04.04.2023
+As group: -<br>
+Dimitar: Research for CanOPEN communication, familiarize with .<br>
+Luuk: Called in sick.<br>
+Rik: -<br>
+Jorn: Create documentation for choice of visualisation tool.<br>
