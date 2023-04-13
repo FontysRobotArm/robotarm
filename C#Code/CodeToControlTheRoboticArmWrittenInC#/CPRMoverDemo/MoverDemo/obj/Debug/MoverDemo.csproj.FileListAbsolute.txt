@@ -14,3 +14,5 @@ C:\Users\Rik06\git\Semester4\ProjectBestanden\Documents from the Previous Projec
 C:\Users\Rik06\git\Semester4\ProjectBestanden\Documents from the Previous Project Group\Files from Oswald\CPRMoverDemoCSharp\CPRMoverDemo\MoverDemo\obj\Debug\MoverDemo.pdb
 C:\Users\Rik06\git\Semester4\ProjectBestanden\Documents from the Previous Project Group\Files from Oswald\CPRMoverDemoCSharp\CPRMoverDemo\MoverDemo\obj\Debug\MoverDemo.Properties.Resources.resources
 C:\Users\Rik06\git\Semester4\ProjectBestanden\Documents from the Previous Project Group\Files from Oswald\CPRMoverDemoCSharp\CPRMoverDemo\MoverDemo\obj\Debug\MoverDemo.csproj.GenerateResource.cache
+C:\Users\jorn-\Documents\Fontys\SI4\Group\C#Code\CodeToControlTheRoboticArmWrittenInC#\CPRMoverDemo\MoverDemo\obj\Debug\MoverDemo.exe
+C:\Users\jorn-\Documents\Fontys\SI4\Group\C#Code\CodeToControlTheRoboticArmWrittenInC#\CPRMoverDemo\MoverDemo\obj\Debug\MoverDemo.pdb
