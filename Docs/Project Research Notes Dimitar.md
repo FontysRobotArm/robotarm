@@ -90,3 +90,5 @@ The arm uses Event driven CANopen, therefore if a message does not arrive in tim
 Usually, in CAN, you receive the response from the previous message when you send a new message. Is it the case with CANopen as well?
 
 [Bosch CANopen article](https://infosys.beckhoff.com/english.php?content=../content/1033/tcsystemmanager/1092789003.html&id=7873477876248720016)
+
+[CANopen/EL6751 documentation](https://infosys.beckhoff.com/english.php?content=../content/1033/el6751/2519193099.html&id=6820221820248492542)
