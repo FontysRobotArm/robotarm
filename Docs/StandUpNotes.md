@@ -28,9 +28,16 @@ Luuk: Called in sick.<br>
 Rik: Research for CanOPEN communication.<br>
 Jorn: Create documentation for choice of visualisation tool.<br>
 
-## 04.04.2023
+## 04.05.2023
 As group: -<br>
-Dimitar: Research for CanOPEN communication, familiarize with .<br>
+Dimitar: Research for CanOPEN communication, familiarize with TwinCAT.<br>
 Luuk: Called in sick.<br>
-Rik: -<br>
+Rik: Try to fix TwinCAT on laptop.<br>
+Jorn: Create documentation for choice of visualisation tool.<br>
+
+## 13.04.2023
+As group: -<br>
+Dimitar: Research for CanOPEN communication.<br>
+Luuk: Document findings on TwinCAT.<br>
+Rik: Try and work with old Unity code from previous group.<br>
 Jorn: Create documentation for choice of visualisation tool.<br>
