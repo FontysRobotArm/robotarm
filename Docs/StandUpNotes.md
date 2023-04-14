@@ -41,3 +41,10 @@ Dimitar: Research for CanOPEN communication.<br>
 Luuk: Document findings on TwinCAT.<br>
 Rik: Try and work with old Unity code from previous group.<br>
 Jorn: Create documentation for choice of visualisation tool.<br>
+
+## 14.04.2023
+As group: Prepare for presentation with Oswald<br>
+Dimitar: Look into courses recieved from Oswald.<br>
+Luuk: Try to find a solution on CAN/programm stuff on plc.<br>
+Rik: Called in absent.<br>
+Jorn: mess arround with Unity, try some tinghs.<br>
