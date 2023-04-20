@@ -48,3 +48,10 @@ Dimitar: Look into courses recieved from Oswald.<br>
 Luuk: Try to find a solution on CAN/programm stuff on plc.<br>
 Rik: Called in absent.<br>
 Jorn: mess arround with Unity, try some tinghs.<br>
+
+## 20.04.2023
+As group: Sprint review.<br>
+Dimitar: Try to figure out CANopen communication.<br>
+Luuk: Try to find out how the ADS protocol works.<br>
+Rik: Try to find out how the ADS protocol works.<br>
+Jorn: Create a conveyor belt in untiy.<br>
