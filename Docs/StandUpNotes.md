@@ -55,3 +55,10 @@ Dimitar: Try to figure out CANopen communication.<br>
 Luuk: Try to find out how the ADS protocol works.<br>
 Rik: Try to find out how the ADS protocol works.<br>
 Jorn: Create a conveyor belt in untiy.<br>
+
+## 21.04.2023
+As group: Progress snapshot review with Suzana.<br>
+Dimitar: Try to figure out CANopen communication and TwinCAT courses.<br>
+Luuk: Document the ADS research and design the object location and size communication.<br>
+Rik: Experiment further with ADS connection between Unity and TwinCAT.<br>
+Jorn: Improving the conveyor belt in Unity.<br>
