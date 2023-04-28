@@ -62,3 +62,10 @@ Dimitar: Try to figure out CANopen communication and TwinCAT courses.<br>
 Luuk: Document the ADS research and design the object location and size communication.<br>
 Rik: Experiment further with ADS connection between Unity and TwinCAT.<br>
 Jorn: Improving the conveyor belt in Unity.<br>
+
+## 21.04.2023
+As group: -<br>
+Dimitar: Going to make classes for the plc.<br>
+Luuk: Try to connect laptop with unity to TwinCAT on plc.<br>
+Rik: Called in sick, going to work from home.<br>
+Jorn: Get position from objcets on belt.<br>
