@@ -67,5 +67,5 @@ Jorn: Improving the conveyor belt in Unity.<br>
 As group: -<br>
 Dimitar: Going to make classes for the plc.<br>
 Luuk: Try to connect laptop with unity to TwinCAT on plc.<br>
-Rik: Called in sick, going to work from home.<br>
+Rik: Called in sick, going to try to get ADS code to work in classes.<br>
 Jorn: Get position from objcets on belt.<br>
