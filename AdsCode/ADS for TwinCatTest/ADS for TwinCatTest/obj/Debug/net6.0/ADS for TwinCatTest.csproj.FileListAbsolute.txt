@@ -1,0 +1,33 @@
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\bin\Debug\net6.0\ADS for TwinCatTest.exe
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\bin\Debug\net6.0\ADS for TwinCatTest.deps.json
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\bin\Debug\net6.0\ADS for TwinCatTest.runtimeconfig.json
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\bin\Debug\net6.0\ADS for TwinCatTest.dll
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\bin\Debug\net6.0\ADS for TwinCatTest.pdb
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\obj\Debug\net6.0\ADS for TwinCatTest.csproj.AssemblyReference.cache
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\obj\Debug\net6.0\ADS for TwinCatTest.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\obj\Debug\net6.0\ADS for TwinCatTest.AssemblyInfoInputs.cache
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\obj\Debug\net6.0\ADS for TwinCatTest.AssemblyInfo.cs
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\obj\Debug\net6.0\ADS for TwinCatTest.csproj.CoreCompileInputs.cache
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\obj\Debug\net6.0\ADS for TwinCatTest.dll
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\obj\Debug\net6.0\refint\ADS for TwinCatTest.dll
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\obj\Debug\net6.0\ADS for TwinCatTest.pdb
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\obj\Debug\net6.0\ADS for TwinCatTest.genruntimeconfig.cache
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\obj\Debug\net6.0\ref\ADS for TwinCatTest.dll
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\bin\Debug\net6.0\TwinCAT.Ads.dll
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\bin\Debug\net6.0\TwinCAT.Ads.Abstractions.dll
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\bin\Debug\net6.0\TwinCAT.Ads.Server.dll
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\bin\Debug\net6.0\System.ComponentModel.Composition.dll
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\bin\Debug\net6.0\System.Configuration.ConfigurationManager.dll
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\bin\Debug\net6.0\System.Drawing.Common.dll
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\bin\Debug\net6.0\System.Reactive.dll
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\bin\Debug\net6.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\bin\Debug\net6.0\System.Security.Permissions.dll
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\bin\Debug\net6.0\System.Windows.Extensions.dll
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+C:\Users\Rik06\source\repos\ADS for TwinCatTest\ADS for TwinCatTest\obj\Debug\net6.0\ADS for TwinCatTest.csproj.CopyComplete
