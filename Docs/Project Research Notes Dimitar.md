@@ -103,3 +103,11 @@ You receive the response from the previous message when you send a new message.
     - Using C# CRI interface provided by CPR (manufacturers of the robot arm)
     - Using the C# CRI interface in combination with the Digital twin to simulate the commands
     - Possibly use Monarco as a bridge between the robot and the Beckhoff PLC
+
+## TwinCAT 3 Solved problems
+
+- Do not know how to use CAN without CANopen
+    - <strong> Soltution: Add a box to the EL6751 module for CAN interface </strong>
+
+- Cannot find variables to link to outputs/inputs
+    - <strong>Solution: (Re)build solution</strong>
