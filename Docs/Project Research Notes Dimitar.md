@@ -83,14 +83,23 @@ Transfer is started by client
 
 PDO (Process Data Object) - the data object, the data that is actually transmitted
 
-The arm uses Event driven CANopen, therefore if a message does not arrive in time, a watchdog is triggered and an error state is engaged.
+The arm uses Event driven CAN, therefore if a message does not arrive in time, a watchdog is triggered and an error state is engaged.
 - Maybe Synchronized CANopen communication can be used, so as to send the SYNC telegram and avoid the error state?
 
 
-Usually, in CAN, you receive the response from the previous message when you send a new message. Is it the case with CANopen as well?
+You receive the response from the previous message when you send a new message.
 
 [Bosch CANopen article](https://infosys.beckhoff.com/english.php?content=../content/1033/tcsystemmanager/1092789003.html&id=7873477876248720016)
 
 [CANopen/EL6751 documentation](https://infosys.beckhoff.com/english.php?content=../content/1033/el6751/2519193099.html&id=6820221820248492542)
 
 [CANopen messages over ADS](https://infosys.beckhoff.com/english.php?content=../content/1033/el6751/5222346763.html&id=)
+
+## 08.05.2023
+
+- Decided that CANopen cannot be used with the robot in the current project
+- Research on CRI
+    - CRI commands exploration
+    - Using C# CRI interface provided by CPR (manufacturers of the robot arm)
+    - Using the C# CRI interface in combination with the Digital twin to simulate the commands
+    - Possibly use Monarco as a bridge between the robot and the Beckhoff PLC
