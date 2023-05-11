@@ -7,6 +7,7 @@ public class Spawner : MonoBehaviour
     public GameObject objectToSpawn;
     public Vector3 minPosition;
     public Vector3 maxPosition;
+    private int objectCounter = 0;
     void Start()
     {
         SpawnObject();
@@ -20,15 +21,18 @@ public class Spawner : MonoBehaviour
             Random.Range(minPosition.z, maxPosition.z)
         );
         
-        var createdObject = Instantiate(objectToSpawn, randomPosition, Quaternion.identity, transform);
-        // createdObject.AddComponent<GetPositionObject>();
+        GameObject newObject = objectToSpawn;
+        newObject.name =  "SpawnerCube" + objectCounter + "";
+
+        var createdObject = Instantiate(newObject, randomPosition, Quaternion.identity, transform);
         createdObject.GetComponent<Rigidbody>().isKinematic = false;
+        objectCounter++;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (transform.childCount < 1)
+        if (transform.childCount < 2)
         {
             SpawnObject();
         }
