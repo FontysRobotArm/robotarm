@@ -69,3 +69,10 @@ Dimitar: Going to make classes for the plc.<br>
 Luuk: Try to connect laptop with unity to TwinCAT on plc.<br>
 Rik: Called in sick, going to try to get ADS code to work in classes.<br>
 Jorn: Get position from objcets on belt.<br>
+
+## 11.05.2023
+As group: -<br>
+Dimitar: Extracting usefull CAN commands, and creating the message structure for can in structured text.<br>
+Luuk: Try to send commands to robot in C# via ethernet.<br>
+Rik: Finishing up the ADS, so it can be implemented in Unity.<br>
+Jorn: Getting the data from the menu screen to the visualistation.<br>
