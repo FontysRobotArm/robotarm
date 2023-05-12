@@ -4,7 +4,7 @@
 
 - ADS implementation in Unity (Rik, Jorn)
 
-- Communication - Unity to TwinCAT
+- Communication - Unity to TwinCAT (Rik, Jorn)
 
 - Dynamic speed change in simulation (Jorn)
 
