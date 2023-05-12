@@ -31,3 +31,36 @@ C:\Users\Rik06\source\repos\ADS Control With Classes\ADS Control With Classes\bi
 C:\Users\Rik06\source\repos\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\Rik06\source\repos\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 C:\Users\Rik06\source\repos\ADS Control With Classes\ADS Control With Classes\obj\Debug\net6.0\ADS Control With Classes.csproj.CopyComplete
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\obj\Debug\net6.0\ADS Control With Classes.csproj.AssemblyReference.cache
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\obj\Debug\net6.0\ADS Control With Classes.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\obj\Debug\net6.0\ADS Control With Classes.AssemblyInfoInputs.cache
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\obj\Debug\net6.0\ADS Control With Classes.AssemblyInfo.cs
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\obj\Debug\net6.0\ADS Control With Classes.csproj.CoreCompileInputs.cache
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\obj\Debug\net6.0\ADS Control With Classes.dll
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\obj\Debug\net6.0\refint\ADS Control With Classes.dll
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\obj\Debug\net6.0\ADS Control With Classes.pdb
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\ADS Control With Classes.exe
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\ADS Control With Classes.deps.json
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\ADS Control With Classes.runtimeconfig.json
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\ADS Control With Classes.dll
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\ADS Control With Classes.pdb
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\TwinCAT.Ads.dll
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\TwinCAT.Ads.Abstractions.dll
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\TwinCAT.Ads.Server.dll
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\System.ComponentModel.Composition.dll
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\System.Configuration.ConfigurationManager.dll
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\System.Drawing.Common.dll
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\System.Reactive.dll
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\System.Security.Permissions.dll
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\System.Windows.Extensions.dll
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\obj\Debug\net6.0\ADS Control With Classes.csproj.CopyComplete
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\obj\Debug\net6.0\ADS Control With Classes.genruntimeconfig.cache
+C:\Users\Rik06\git\robotarm\AdsCode\Final Version ADS Control\ADS Control With Classes\ADS Control With Classes\obj\Debug\net6.0\ref\ADS Control With Classes.dll

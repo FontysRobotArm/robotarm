@@ -1,5 +1,4 @@
 ﻿using TwinCAT.Ads;
-using TwinCAT.Ads.TypeSystem;
 
 namespace ADS_Control_With_Classes
 {
@@ -92,13 +91,13 @@ namespace ADS_Control_With_Classes
         }
 
         //schould be changed to a private function in the final version. Is now public for testing
-        private dynamic GetCurrentArmLocation()
+        public dynamic GetCurrentArmLocation()
         {
             return client.ReadAny(positionVeriableHandle, typeof(int));
         }
 
         //should be changed to a private function in the final version. Is now public for testing
-        private dynamic GetCurrentArmSpeed()
+        public dynamic GetCurrentArmSpeed()
         {
             return client.ReadAny(speedVeriableHandle, typeof(int));
         }
