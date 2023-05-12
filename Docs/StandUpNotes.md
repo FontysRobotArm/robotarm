@@ -76,3 +76,10 @@ Dimitar: Extracting usefull CAN commands, and creating the message structure for
 Luuk: Try to send commands to robot in C# via ethernet.<br>
 Rik: Finishing up the ADS, so it can be implemented in Unity.<br>
 Jorn: Getting the data from the menu screen to the visualistation.<br>
+
+## 12.05.2023
+As group: -<br>
+Dimitar: Create documentation on why CANopen isn't a valuable option for communication with the robot arm.<br>
+Luuk: Try to send commands to robot in C# via ethernet.<br>
+Rik: Finishing up the ADS, so it can be implemented in Unity.<br>
+Jorn: Getting the data from the menu screen to the visualistation.<br>
