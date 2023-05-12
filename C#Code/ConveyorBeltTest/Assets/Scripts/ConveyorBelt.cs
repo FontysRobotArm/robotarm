@@ -10,7 +10,7 @@ using UnityEngine.UIElements;
 
 public class ConveyorBelt : MonoBehaviour
 {
-    private float speed;
+    private float speed = 5;
     [SerializeField] 
     private Vector3 direction;
     [SerializeField] 
@@ -21,15 +21,44 @@ public class ConveyorBelt : MonoBehaviour
     private void Start()
     {
         rBody = GetComponent<Rigidbody>();
-        
+        GameObject thisObject = GameObject.Find("Outer conveyor belt");
+        // GameObject camera = GameObject.Find("Main Camera");
+
+        GameObject conveyorLenghtObject = GameObject.Find("Canvas/MainMenu/ConveyorLength");
+        GameObject conveyorWidthObject = GameObject.Find("Canvas/MainMenu/ConveyorWidth");
         GameObject conveyorSpeedObject = GameObject.Find("Canvas/MainMenu/ConveyorSpeed");
         String conveyorSpeedText = conveyorSpeedObject.GetComponent<TMP_InputField>().text;
+        String conveyorLenghtText = conveyorLenghtObject.GetComponent<TMP_InputField>().text;
+        String conveyorWidthText = conveyorWidthObject.GetComponent<TMP_InputField>().text;
 
-        if (!string.IsNullOrEmpty(conveyorSpeedText)) {
+        if (!string.IsNullOrEmpty(conveyorSpeedText)) 
+        {
             speed = float.Parse(conveyorSpeedText);
         }
-        else {
-            speed = 5;
+        
+        if (!string.IsNullOrEmpty(conveyorLenghtText) && !string.IsNullOrEmpty(conveyorWidthText))
+        {
+            thisObject.transform.localScale = new Vector3(float.Parse(conveyorWidthText), 1, float.Parse(conveyorLenghtText));
+        }
+        else
+        {
+            if (!string.IsNullOrEmpty(conveyorLenghtText))
+            {
+                thisObject.transform.localScale = new Vector3(5, 1, float.Parse(conveyorLenghtText));
+            }
+            else
+            {
+                thisObject.transform.localScale = new Vector3(5, 1, 20);
+            }
+            
+            if (!string.IsNullOrEmpty(conveyorWidthText))
+            {
+                thisObject.transform.localScale = new Vector3(float.Parse(conveyorWidthText), 1);
+            }
+            else
+            {
+                thisObject.transform.localScale = new Vector3(5, 1, 20);
+            }
         }
         
         SceneManager.UnloadSceneAsync("Mainmenu");
