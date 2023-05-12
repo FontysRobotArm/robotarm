@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "e8GO/Vqk8pltpFCIu/GHcDmf+cxOUWgF7tdgfA2na3WcReFkYokHJj5XDFyPHcbSWlPPdgzrO2Y8yOocRrcUMQ==",
+  "dgSpecHash": "+jRp0PfJBWxlYV0wcp6d5/Lfi4czewai8LgtHD4/C7pREQyJdeTaDRMjyAW3eVzdwd4Lf7PzlEtrM+fwRviibA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Rik06\\source\\repos\\ADS Control With Classes\\ADS Control With Classes\\ADS Control With Classes.csproj",
+  "projectFilePath": "C:\\Users\\Rik06\\git\\robotarm\\AdsCode\\Final Version ADS Control\\ADS Control With Classes\\ADS Control With Classes\\ADS Control With Classes.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Rik06\\.nuget\\packages\\beckhoff.twincat.ads\\6.0.249\\beckhoff.twincat.ads.6.0.249.nupkg.sha512",
     "C:\\Users\\Rik06\\.nuget\\packages\\beckhoff.twincat.ads.abstractions\\6.0.249\\beckhoff.twincat.ads.abstractions.6.0.249.nupkg.sha512",

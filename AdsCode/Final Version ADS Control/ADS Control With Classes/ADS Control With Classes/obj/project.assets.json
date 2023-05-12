@@ -711,11 +711,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Rik06\\source\\repos\\ADS Control With Classes\\ADS Control With Classes\\ADS Control With Classes.csproj",
+      "projectUniqueName": "C:\\Users\\Rik06\\git\\robotarm\\AdsCode\\Final Version ADS Control\\ADS Control With Classes\\ADS Control With Classes\\ADS Control With Classes.csproj",
       "projectName": "ADS Control With Classes",
-      "projectPath": "C:\\Users\\Rik06\\source\\repos\\ADS Control With Classes\\ADS Control With Classes\\ADS Control With Classes.csproj",
+      "projectPath": "C:\\Users\\Rik06\\git\\robotarm\\AdsCode\\Final Version ADS Control\\ADS Control With Classes\\ADS Control With Classes\\ADS Control With Classes.csproj",
       "packagesPath": "C:\\Users\\Rik06\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Rik06\\source\\repos\\ADS Control With Classes\\ADS Control With Classes\\obj\\",
+      "outputPath": "C:\\Users\\Rik06\\git\\robotarm\\AdsCode\\Final Version ADS Control\\ADS Control With Classes\\ADS Control With Classes\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
