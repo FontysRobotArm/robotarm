@@ -4,8 +4,8 @@
     <Declaration><![CDATA[FUNCTION_BLOCK TCPClient
 VAR CONSTANT
 	CLIENT_RECONNECT_TIME : TIME := T#31S;
-	MAX_MESSAGE_LENGTH : INT := 255;	
-
+	MAX_MESSAGE_LENGTH : INT := 255;
+	MAX_RECEIVE_MESSAGE_LENGTH : UDINT := 1024;
 END_VAR
 VAR
 	m_isClientEnabled : BOOL := TRUE;	
@@ -23,8 +23,8 @@ VAR
 	
 	//Note: make it an input and send only when the class is called?
 	m_messageToSend : T_MaxString := 'Hello world!';
-	m_messageReceived : T_MaxString;	// The latest message received from the server
-	m_messageReceivedRef : REFERENCE TO T_MaxString;
+	m_messageReceived : T_MaxString;	// The latest message received from the server //TODO: REMOVE, Depricated
+	m_messageReceivedRef : REFERENCE TO STRING(MAX_RECEIVE_MESSAGE_LENGTH);
 	
 	m_isConnected : BOOL := FALSE;
 	m_isBusy : BOOL;
@@ -47,7 +47,7 @@ VAR
 	m_receiveTimer : TON();
 	m_isReceiveTimeoutEnabled : BOOL := FALSE;	
 	m_receiveTimeoutTimer : TON();
-	m_receiveBuffer : T_MaxString := '';
+	m_receiveBuffer : STRING(MAX_RECEIVE_MESSAGE_LENGTH) := '';
 	m_totalBytesReceived : UDINT := 0;
 	m_receiveTimeout : TIME := T#1M;
 	m_readInterval : TIME := T#10MS;
@@ -144,7 +144,7 @@ END_CASE
     <Method Name="BindReceiveMessage" Id="{b89604b0-6d7a-48be-b7d7-d776b5017de2}">
       <Declaration><![CDATA[METHOD PUBLIC BindReceiveMessage : BOOL
 VAR_INPUT
-	variableToBind : REFERENCE TO T_MaxString;
+	variableToBind : REFERENCE TO STRING(MAX_RECEIVE_MESSAGE_LENGTH);
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -220,9 +220,6 @@ NewDataAvailable := m_newDataAvailable;]]></ST>
     </Property>
     <Method Name="Receive" Id="{ecff7511-048a-4262-805e-93cdb66af916}">
       <Declaration><![CDATA[METHOD PRIVATE Receive : ReceiveStatus
-VAR CONSTANT
-	MAX_RECEIVE_MESSAGE_LENGTH : UDINT := 1024;
-END_VAR
 VAR_INPUT
 	timeout : TIME := T#10S;
 	readInterval : TIME := T#10MS;

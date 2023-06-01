@@ -23,6 +23,12 @@
     <Compile Include="DUTs\DataExchangeState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\Command.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Message.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\ReceiveStatus.TcDUT">
       <SubType>Code</SubType>
     </Compile>

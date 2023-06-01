@@ -4,7 +4,17 @@
     <Declaration><![CDATA[PROGRAM MAIN
 VAR CONSTANT
 	LOCALHOST_IP : T_IPv4Addr := '127.0.0.1';
+	LOCALHOST_PORT : UDINT := 8080;
+
 	REMOTE_IP : T_IPv4Addr := '192.168.3.1';
+	REMOTE_PORT : UDINT := 8080;
+	
+	ROBOT_IP : T_IPv4Addr := '192.168.3.11';
+	ROBOT_PORT : UDINT := 3920;
+	
+	command : Command := ();
+	message : Message := ();
+
 END_VAR
 VAR
 	buttonConnectPressed : BOOL;
@@ -15,14 +25,21 @@ VAR
 	disconnectTrigger : R_TRIG;
 	sendTrigger : R_TRIG;
 	
-	client : TCPClient(REMOTE_IP, 8080, isEnabled := FALSE);
+	client : TCPClient(ROBOT_IP, ROBOT_PORT, isEnabled := FALSE);
 
 	
 	closeAllConnections : FB_SocketCloseALL();
 	closeAll : BOOL := TRUE;	//Close all on initial startup
 	
-	messageToServer : T_MaxString := 'Hello world!';
-	messageFromServer : T_MaxString := '';
+	messageToServer : T_MaxString := 'CRISTART 1 CMD Connect CRIEND';
+	messageFromServer : STRING(1024) := '';
+	finalSendMsg : STRING(100);
+	
+	heartbeatTimer : TON;
+	heartbeatInterval : TIME := T#1S;
+	
+	sendCounter : INT := 1;
+	finalAliveMessage : STRING(100) := '';
 	
 END_VAR
 ]]></Declaration>
@@ -57,51 +74,49 @@ END_IF
 
 IF (sendTrigger.Q) THEN
 	//LogToWarning(msgFmtStr := 'Sending: %s', messageArg := messageToServer);
-	client.Send(messageToSend := messageToServer);
-END_IF
+	finalSendMsg := CONCAT('CRISTART ', CONCAT(INT_TO_STRING(sendCounter), ' CMD Enable CRIEND'));
+	sendCounter := (sendCounter MOD 9999) + 1;
+	
+	client.Send(messageToSend := finalSendMsg);
 
-// === ====
+//	client.Send(messageToSend := messageToServer);
+END_IF
+// === ===
+
+// === Heartbeat ===
+
+heartbeatTimer(IN := TRUE, PT := heartbeatInterval);
+
+IF (heartbeatTimer.Q AND client.IsClientEnabled) THEN
+	heartbeatTimer(IN := FALSE);
+	
+	finalAliveMessage := CONCAT('CRISTART ', CONCAT(INT_TO_STRING(sendCounter), message.AliveDemo));
+	client.Send(messageToSend := finalAliveMessage);
+	sendCounter := (sendCounter MOD 9999) + 1;
+END_IF
+// === ===
 
 client();
-
-
 
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="130" Count="0" />
-      <LineId Id="119" Count="0" />
-      <LineId Id="121" Count="0" />
-      <LineId Id="123" Count="2" />
-      <LineId Id="122" Count="0" />
-      <LineId Id="127" Count="0" />
-      <LineId Id="126" Count="0" />
-      <LineId Id="128" Count="1" />
-      <LineId Id="134" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="175" Count="0" />
-      <LineId Id="141" Count="0" />
-      <LineId Id="133" Count="0" />
-      <LineId Id="91" Count="0" />
-      <LineId Id="90" Count="0" />
-      <LineId Id="146" Count="1" />
-      <LineId Id="174" Count="0" />
-      <LineId Id="213" Count="0" />
-      <LineId Id="149" Count="0" />
-      <LineId Id="135" Count="0" />
-      <LineId Id="137" Count="2" />
-      <LineId Id="93" Count="0" />
-      <LineId Id="92" Count="0" />
-      <LineId Id="104" Count="0" />
-      <LineId Id="153" Count="0" />
-      <LineId Id="101" Count="0" />
-      <LineId Id="177" Count="0" />
-      <LineId Id="176" Count="0" />
-      <LineId Id="150" Count="0" />
-      <LineId Id="152" Count="0" />
-      <LineId Id="193" Count="0" />
-      <LineId Id="187" Count="0" />
-      <LineId Id="186" Count="0" />
+      <LineId Id="321" Count="29" />
+      <LineId Id="389" Count="0" />
+      <LineId Id="388" Count="0" />
+      <LineId Id="391" Count="2" />
+      <LineId Id="351" Count="1" />
+      <LineId Id="381" Count="0" />
+      <LineId Id="354" Count="0" />
+      <LineId Id="372" Count="0" />
+      <LineId Id="380" Count="0" />
+      <LineId Id="373" Count="3" />
+      <LineId Id="383" Count="1" />
+      <LineId Id="377" Count="0" />
+      <LineId Id="385" Count="0" />
+      <LineId Id="378" Count="0" />
+      <LineId Id="355" Count="2" />
+      <LineId Id="369" Count="0" />
       <LineId Id="95" Count="0" />
     </LineIds>
   </POU>

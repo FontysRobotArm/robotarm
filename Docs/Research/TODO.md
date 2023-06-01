@@ -1,10 +1,8 @@
 ## TwinCAT 3 TCP/IP Client
 
-- [ ] Read more than sizeof(buffer)
+- [x] Read more than 255 bytes per read
 - [ ] String splitting
-- [ ] Determine end of message by CRIEND
+- [x] Determine end of message
 - [x] Set Ip via property
-    
-    - Might not be necessary, if the robot sends and actual string.
-
-"lorem ipsum dolor sit imet CRIEND\0"
+- [ ] Message splitting via CRISTART/END
+- [ ] Count responses

@@ -606,11 +606,11 @@
                     </o>
                     <o>
                       <v n="Id">2565699834L</v>
-                      <v n="Value">"VCENTER"</v>
+                      <v n="Value">"TOP"</v>
                     </o>
                     <o>
                       <v n="Id">4134387352L</v>
-                      <v n="Value">"NONE"</v>
+                      <v n="Value">"LINEBREAK"</v>
                     </o>
                     <o>
                       <v n="Id">1603690730L</v>
@@ -650,11 +650,11 @@
                     </o>
                     <o>
                       <v n="Id">2422045748L</v>
-                      <v n="Value">318</v>
+                      <v n="Value">367</v>
                     </o>
                     <o>
                       <v n="Id">2134141914L</v>
-                      <v n="Value">30</v>
+                      <v n="Value">82</v>
                     </o>
                     <o>
                       <v n="Id">3729828405L</v>
@@ -901,12 +901,12 @@
             <d2 n="Size" ckt="Int32" cvt="VisualObjectSize">
               <v>0</v>
               <o>
-                <v n="Width">921</v>
+                <v n="Width">970</v>
                 <v n="Height">310</v>
               </o>
               <v>1</v>
               <o>
-                <v n="Width">922</v>
+                <v n="Width">971</v>
                 <v n="Height">311</v>
               </o>
             </d2>
