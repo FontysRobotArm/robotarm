@@ -7,10 +7,11 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using Cursor = UnityEngine.Cursor;
 
 public class ConveyorBelt : MonoBehaviour
 {
-    private float speed = 5;
+    // private float speed = 5;
     [SerializeField] 
     private Vector3 direction;
     [SerializeField] 
@@ -18,10 +19,14 @@ public class ConveyorBelt : MonoBehaviour
     public Rigidbody first;
     private Rigidbody rBody;
 
+    public float length = 20;
+    public float width = 5;
+    public float speed = 5;
+
     private void Start()
     {
         rBody = GetComponent<Rigidbody>();
-        GameObject thisObject = GameObject.Find("Outer conveyor belt");
+        GameObject thisObject = GameObject.Find("Conveyor belt scaler");
         // GameObject camera = GameObject.Find("Main Camera");
 
         GameObject conveyorLenghtObject = GameObject.Find("Canvas/MainMenu/ConveyorLength");
@@ -39,12 +44,15 @@ public class ConveyorBelt : MonoBehaviour
         if (!string.IsNullOrEmpty(conveyorLenghtText) && !string.IsNullOrEmpty(conveyorWidthText))
         {
             thisObject.transform.localScale = new Vector3(float.Parse(conveyorWidthText), 1, float.Parse(conveyorLenghtText));
+            length = float.Parse(conveyorLenghtText);
+            width = float.Parse(conveyorWidthText);
         }
         else
         {
             if (!string.IsNullOrEmpty(conveyorLenghtText))
             {
                 thisObject.transform.localScale = new Vector3(5, 1, float.Parse(conveyorLenghtText));
+                length = float.Parse(conveyorLenghtText);
             }
             else
             {
@@ -54,6 +62,7 @@ public class ConveyorBelt : MonoBehaviour
             if (!string.IsNullOrEmpty(conveyorWidthText))
             {
                 thisObject.transform.localScale = new Vector3(float.Parse(conveyorWidthText), 1);
+                width = float.Parse(conveyorWidthText);
             }
             else
             {
@@ -66,12 +75,11 @@ public class ConveyorBelt : MonoBehaviour
 
     private void Update()
     {
-        Console.Out.WriteLine(onBelt);
-        for (int i = 0; i < onBelt.Count - 1; i++)
-        {
-            Rigidbody itemOnBelt = onBelt[i].GetComponent<Rigidbody>();
-            first = itemOnBelt;
-        }
+        // for (int i = 0; i < onBelt.Count - 1; i++)
+        // {
+        //     Rigidbody itemOnBelt = onBelt[i].GetComponent<Rigidbody>();
+        //     first = itemOnBelt;
+        // }
     }
 
     private void FixedUpdate()
@@ -88,7 +96,7 @@ public class ConveyorBelt : MonoBehaviour
         {
             first = null;
         }
-        
+
         Vector3 pos = rBody.position;
         rBody.position += direction * speed * Time.fixedDeltaTime;
         rBody.MovePosition(pos);

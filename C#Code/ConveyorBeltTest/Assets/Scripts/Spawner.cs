@@ -49,7 +49,7 @@ public class Spawner : MonoBehaviour
     void SpawnObject()
     {
         Vector3 randomPosition = new Vector3(
-            Random.Range(minPosition.x, maxPosition.x),
+            Random.Range(2, 2),
             Random.Range(minPosition.y, maxPosition.y),
             Random.Range(minPosition.z, maxPosition.z)
         );
