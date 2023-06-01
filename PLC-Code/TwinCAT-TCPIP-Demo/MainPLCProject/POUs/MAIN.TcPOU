@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MAIN" Id="{95304827-347d-4a06-bca0-c327a1e079aa}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR CONSTANT
+	LOCALHOST_IP : T_IPv4Addr := '127.0.0.1';
+	REMOTE_IP : T_IPv4Addr := '192.168.3.1';
+END_VAR
+VAR
+	buttonConnectPressed : BOOL;
+	buttonDisconnectPressed : BOOL;	
+	buttonSendPressed : BOOL;
+	
+	connectTrigger : R_TRIG;
+	disconnectTrigger : R_TRIG;
+	sendTrigger : R_TRIG;
+	
+	client : TCPClient(REMOTE_IP, 8080, isEnabled := FALSE);
+
+	
+	closeAllConnections : FB_SocketCloseALL();
+	closeAll : BOOL := TRUE;	//Close all on initial startup
+	
+	messageToServer : T_MaxString := 'Hello world!';
+	messageFromServer : T_MaxString := '';
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//On PLC reset/program download, close all connections
+IF (closeAll) THEN	
+	closeAll := FALSE;
+	closeAllConnections(sSrvNetId := '', bExecute := TRUE, tTimeout := T#10S);
+ELSE
+	closeAllConnections(bExecute := FALSE);
+END_IF
+
+IF (closeAllConnections.bBusy) THEN
+	RETURN;	//Do not continue the program until all connections are closed
+END_IF
+
+// === ===
+
+// === UI Handling ===
+connectTrigger(CLK := buttonConnectPressed);
+disconnectTrigger(CLK := buttonDisconnectPressed);
+sendTrigger(CLK := buttonSendPressed);
+
+IF (connectTrigger.Q) THEN
+	client.BindReceiveMessage(variableToBind := messageFromServer);
+	client.Enable();
+END_IF
+
+IF (disconnectTrigger.Q) THEN
+	client.Disable();
+END_IF
+
+IF (sendTrigger.Q) THEN
+	//LogToWarning(msgFmtStr := 'Sending: %s', messageArg := messageToServer);
+	client.Send(messageToSend := messageToServer);
+END_IF
+
+// === ====
+
+client();
+
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="130" Count="0" />
+      <LineId Id="119" Count="0" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="123" Count="2" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="128" Count="1" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="175" Count="0" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="146" Count="1" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="213" Count="0" />
+      <LineId Id="149" Count="0" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="137" Count="2" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="177" Count="0" />
+      <LineId Id="176" Count="0" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="193" Count="0" />
+      <LineId Id="187" Count="0" />
+      <LineId Id="186" Count="0" />
+      <LineId Id="95" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

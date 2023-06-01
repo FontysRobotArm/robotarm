@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="ClientDataExchanger" Id="{4c6b4c11-d030-47d4-aaf8-df7c8a8bffa3}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK ClientDataExchanger
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	//TODO: Finish https://infosys.beckhoff.com/english.php?content=../content/1033/tf6310_tc3_tcpip/84203915.html&id=
+	//Note: Needed? Wouldn't it be better to just have a .Send and .Receive methods?
+	m_socketHandle : T_HSOCKET;
+	m_messageToServer : T_MaxString;	
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <LineIds Name="ClientDataExchanger">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
