@@ -29,6 +29,9 @@
     <Compile Include="DUTs\Message.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\MessageLogData.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\ReceiveStatus.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -37,6 +40,10 @@
     </Compile>
     <Compile Include="GlobalTextList.TcGTLO">
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GVLs\GVL_Constants.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
@@ -47,7 +54,13 @@
     <Compile Include="POUs\Classes\TCPClient.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Helpers\AddCounterToMessage.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Helpers\LogToWarning.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Helpers\ShiftHistoryLeft.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
@@ -124,9 +137,17 @@
       <DefaultResolution>Tc2_TcpIp, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_TcpIp</Namespace>
     </PlaceholderReference>
+    <PlaceholderReference Include="Tc2_Utilities">
+      <DefaultResolution>Tc2_Utilities, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_Utilities</Namespace>
+    </PlaceholderReference>
     <PlaceholderReference Include="Tc3_Module">
       <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc3_Module</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="VisuDialogs">
+      <DefaultResolution>VisuDialogs, * (System)</DefaultResolution>
+      <Namespace>VisuDialogs</Namespace>
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>

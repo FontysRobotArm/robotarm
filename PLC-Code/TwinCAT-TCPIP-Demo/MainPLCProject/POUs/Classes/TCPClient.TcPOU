@@ -5,7 +5,10 @@
 VAR CONSTANT
 	CLIENT_RECONNECT_TIME : TIME := T#31S;
 	MAX_MESSAGE_LENGTH : INT := 255;
-	MAX_RECEIVE_MESSAGE_LENGTH : UDINT := 1024;
+	MAX_RECEIVE_MESSAGE_LENGTH : UDINT := GVL_Constants.MAX_RECEIVE_MESSAGE_LENGTH;
+END_VAR
+VAR_OUTPUT
+	totalMessagesReceived : UDINT := 0;
 END_VAR
 VAR
 	m_isClientEnabled : BOOL := TRUE;	
@@ -23,7 +26,7 @@ VAR
 	
 	//Note: make it an input and send only when the class is called?
 	m_messageToSend : T_MaxString := 'Hello world!';
-	m_messageReceived : T_MaxString;	// The latest message received from the server //TODO: REMOVE, Depricated
+	//m_messageReceived : T_MaxString;	// The latest message received from the server //TODO: REMOVE, Depricated
 	m_messageReceivedRef : REFERENCE TO STRING(MAX_RECEIVE_MESSAGE_LENGTH);
 	
 	m_isConnected : BOOL := FALSE;
@@ -57,6 +60,7 @@ VAR
 	m_receiveStatus : ReceiveStatus;
 	m_newDataAvailable : BOOL := FALSE;	//Reset to false when it is read
 	m_receiveErrorId : UDINT := 0;
+	m_totalMessagesReceived : UDINT := 0;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -106,7 +110,6 @@ CASE m_currentState OF
 		
 	//
 	ClientState.RECEIVING:
-	//Serves as Idle state for now, constant listening
 		m_receiveStatus := Receive(timeout := m_receiveTimeout, 
 									readInterval := m_readInterval, 
 									messageDelimiter := m_receiveMessageDelimiter,
@@ -115,6 +118,7 @@ CASE m_currentState OF
 		IF (m_receiveStatus <> ReceiveStatus.RECEIVING) THEN
 			IF (m_receiveStatus = ReceiveStatus.DONE) THEN
 				//
+				totalMessagesReceived := totalMessagesReceived + 1;
 				m_newDataAvailable := TRUE;
 			END_IF
 			
@@ -195,6 +199,17 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Property Name="IsConnected" Id="{d148d408-4a50-4862-9fbe-53fc71607415}">
+      <Declaration><![CDATA[PROPERTY IsConnected : BOOL]]></Declaration>
+      <Get Name="Get" Id="{ef7367ea-0ced-4a80-8e87-02fecf2f676f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsConnected := m_isConnected;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="LastSendStatus" Id="{fcf387e3-b535-4bf3-94ce-d4c7972b1568}">
       <Declaration><![CDATA[PROPERTY LastSendStatus : SendStatus]]></Declaration>
       <Get Name="Get" Id="{060afe32-e517-4674-a7f8-af437e14b64c}">
@@ -206,18 +221,20 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Property Name="NewDataAvailable" Id="{5e1b1e70-cabd-4661-b41f-2646f69b5693}">
-      <Declaration><![CDATA[PROPERTY PUBLIC NewDataAvailable : BOOL]]></Declaration>
-      <Get Name="Get" Id="{56240a6e-549f-41db-b070-4da842263bc7}">
-        <Declaration><![CDATA[VAR
+    <Method Name="NewMessageAvailable" Id="{3b2505a2-9e37-43e6-bf49-6d37362e843d}">
+      <Declaration><![CDATA[METHOD PUBLIC NewMessageAvailable : BOOL
+VAR_INPUT
+	clearFlag : BOOL := FALSE;	//Clears the new message flag if set to true, does not otherwise
 END_VAR
 ]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[//R_TRIG?
-NewDataAvailable := m_newDataAvailable;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
+      <Implementation>
+        <ST><![CDATA[NewMessageAvailable := m_newDataAvailable;
+
+IF (clearFLag) THEN
+	m_newDataAvailable := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="Receive" Id="{ecff7511-048a-4262-805e-93cdb66af916}">
       <Declaration><![CDATA[METHOD PRIVATE Receive : ReceiveStatus
 VAR_INPUT
@@ -242,9 +259,6 @@ VAR
 	currentFrameLength : UDINT := 0; // Length of string received this cycle	//Should be fine
 	
 	index : UDINT := 0;	//For-loop index
-	
-	//EXAMPLE, NOT TO BE USED
-	//fullServerMessage : STRING(MAX_RECEIVE_MESSAGE_LENGTH);
 	
 END_VAR]]></Declaration>
       <Implementation>
@@ -302,9 +316,7 @@ CASE m_receiveDataExchangeState OF
 					FOR index := startPosition TO endPosition BY 1 DO
 						IF (m_receiveBuffer[index] = messageDelimiter) THEN	//End of message check
 							//End of message received
-							currentFrameLength := index + 1;	//TODO: Check for overflow
-							
-							//TODO: Rework MEMCPY and MEMMOVE to utilize the larger size (Change m_messageReceiveRef and m_receiveBuffer's sizes
+							currentFrameLength := index + 1;
 							
 							MEMCPY(destAddr := ADR(m_messageReceivedRef), srcAddr := ADR(m_receiveBuffer), n := currentFrameLength);
 							//Move the remaining data bytes to the begining
@@ -468,19 +480,13 @@ END_CASE
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="UpdateReceiveReferene" Id="{3476166c-9b01-4b60-906c-355f193cfa5f}">
-      <Declaration><![CDATA[METHOD PRIVATE UpdateReceiveReferene : BOOL]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[IF (NOT __ISVALIDREF(m_messageReceivedRef)) THEN
-	RETURN;
-END_IF
-m_messageReceivedRef := m_messageReceived;]]></ST>
-      </Implementation>
-    </Method>
     <LineIds Name="TCPClient">
-      <LineId Id="387" Count="49" />
+      <LineId Id="387" Count="45" />
+      <LineId Id="434" Count="2" />
       <LineId Id="466" Count="0" />
-      <LineId Id="438" Count="8" />
+      <LineId Id="438" Count="3" />
+      <LineId Id="594" Count="0" />
+      <LineId Id="442" Count="4" />
       <LineId Id="534" Count="0" />
       <LineId Id="448" Count="3" />
       <LineId Id="535" Count="0" />
@@ -504,19 +510,24 @@ m_messageReceivedRef := m_messageReceived;]]></ST>
     <LineIds Name="TCPClient.IsClientEnabled.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
+    <LineIds Name="TCPClient.IsConnected.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
     <LineIds Name="TCPClient.LastSendStatus.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
-    <LineIds Name="TCPClient.NewDataAvailable.Get">
-      <LineId Id="2" Count="0" />
+    <LineIds Name="TCPClient.NewMessageAvailable">
       <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="1" />
     </LineIds>
     <LineIds Name="TCPClient.Receive">
       <LineId Id="1464" Count="42" />
       <LineId Id="1508" Count="1" />
       <LineId Id="1597" Count="1" />
       <LineId Id="1510" Count="7" />
-      <LineId Id="1599" Count="2" />
+      <LineId Id="1601" Count="0" />
       <LineId Id="1518" Count="2" />
       <LineId Id="1522" Count="14" />
       <LineId Id="1538" Count="3" />
@@ -548,10 +559,6 @@ m_messageReceivedRef := m_messageReceived;]]></ST>
       <LineId Id="239" Count="9" />
       <LineId Id="274" Count="0" />
       <LineId Id="252" Count="21" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="TCPClient.UpdateReceiveReferene">
-      <LineId Id="6" Count="2" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

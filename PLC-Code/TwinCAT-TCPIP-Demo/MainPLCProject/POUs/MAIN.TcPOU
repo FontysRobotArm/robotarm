@@ -3,8 +3,8 @@
   <POU Name="MAIN" Id="{95304827-347d-4a06-bca0-c327a1e079aa}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR CONSTANT
-	LOCALHOST_IP : T_IPv4Addr := '127.0.0.1';
-	LOCALHOST_PORT : UDINT := 8080;
+	LOCAL_IP : T_IPv4Addr := '127.0.0.1';
+	LOCAL_PORT : UDINT := 8080;
 
 	REMOTE_IP : T_IPv4Addr := '192.168.3.1';
 	REMOTE_PORT : UDINT := 8080;
@@ -14,110 +14,171 @@ VAR CONSTANT
 	
 	command : Command := ();
 	message : Message := ();
+	//endHistoryIndex : BYTE := 9;
 
 END_VAR
 VAR
 	buttonConnectPressed : BOOL;
 	buttonDisconnectPressed : BOOL;	
 	buttonSendPressed : BOOL;
+	buttonConnectToRobotPressed : BOOL;
+	buttonDebugSendPressed : BOOL;
+	buttonEnableMotorsPressed : BOOL;
 	
 	connectTrigger : R_TRIG;
 	disconnectTrigger : R_TRIG;
 	sendTrigger : R_TRIG;
+	connectToRobotTrigger : R_TRIG;
+	debugSendTrigger : R_TRIG;
+	enableMotorsTrigger : R_TRIG;
 	
-	client : TCPClient(ROBOT_IP, ROBOT_PORT, isEnabled := FALSE);
-
+	client : TCPClient(LOCAL_IP, LOCAL_PORT, isEnabled := FALSE);
+	LocalSystemTime : FB_LocalSystemTime;
+	
+	connectionMessage : STRING(20) := 'Disconnected';
+	isHeartbeatEnabled : BOOL := FALSE;
 	
 	closeAllConnections : FB_SocketCloseALL();
 	closeAll : BOOL := TRUE;	//Close all on initial startup
 	
-	messageToServer : T_MaxString := 'CRISTART 1 CMD Connect CRIEND';
-	messageFromServer : STRING(1024) := '';
-	finalSendMsg : STRING(100);
+	//messageToServer : T_MaxString := 'CRISTART 1 CMD Connect CRIEND';
+	messageToServer : T_MaxString := 'VAR Joint 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0';
+	debugMessageToServer : T_MaxString := 'VAR Joint 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0';
+	messageFromServer : STRING(GVL_Constants.MAX_RECEIVE_MESSAGE_LENGTH) := '';
+	//finalSendMsg : STRING(100);
 	
 	heartbeatTimer : TON;
 	heartbeatInterval : TIME := T#1S;
 	
 	sendCounter : INT := 1;
 	finalAliveMessage : STRING(100) := '';
+	totalMessagesFromServerCount : UDINT := 0;
 	
+	//TODO: Extract into fb? Separate task?
+	currentTime : TIMESTRUCT;
+	messageHistoryArray : ARRAY [0.. GVL_Constants.MAX_HISTORY_SIZE - 1] OF MessageLogData;
+	currentHistoryIndex : BYTE := 0;
+	currentMessageLogData : MessageLogData;
+	
+	//Testing
+	
+	executed : BOOL := FALSE;
+	test : UDINT;
+	test2 : UDINT;
+	test3 : UDINT;
+
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[//On PLC reset/program download, close all connections
-IF (closeAll) THEN	
-	closeAll := FALSE;
-	closeAllConnections(sSrvNetId := '', bExecute := TRUE, tTimeout := T#10S);
-ELSE
-	closeAllConnections(bExecute := FALSE);
-END_IF
+      <ST><![CDATA[////On PLC reset/program download, close all connections
+//IF (closeAll) THEN	
+//	closeAll := FALSE;
+//	closeAllConnections(sSrvNetId := '', bExecute := TRUE, tTimeout := T#10S);
+//ELSE
+//	closeAllConnections(bExecute := FALSE);
+//END_IF
 
-IF (closeAllConnections.bBusy) THEN
-	RETURN;	//Do not continue the program until all connections are closed
-END_IF
+//IF (closeAllConnections.bBusy) THEN
+//	RETURN;	//Do not continue the program until all connections are closed
+//END_IF
 
-// === ===
+//// === ===
 
-// === UI Handling ===
-connectTrigger(CLK := buttonConnectPressed);
-disconnectTrigger(CLK := buttonDisconnectPressed);
-sendTrigger(CLK := buttonSendPressed);
+//// === UI Handling ===
+//LocalSystemTime(bEnable := TRUE, tTimeout := T#1S, systemTime => currentTime);
 
-IF (connectTrigger.Q) THEN
-	client.BindReceiveMessage(variableToBind := messageFromServer);
-	client.Enable();
-END_IF
+//connectTrigger(CLK := buttonConnectPressed);
+//disconnectTrigger(CLK := buttonDisconnectPressed);
+//sendTrigger(CLK := buttonSendPressed);
+//connectToRobotTrigger(CLK := buttonConnectToRobotPressed);
+//debugSendTrigger(CLK := buttonDebugSendPressed);
+//enableMotorsTrigger(CLK := buttonEnableMotorsPressed);
 
-IF (disconnectTrigger.Q) THEN
-	client.Disable();
-END_IF
+//IF (client.IsConnected) THEN
+//	connectionMessage := 'Connected';
+//ELSE
+//	connectionMessage := 'Disconnected';
+//END_IF
 
-IF (sendTrigger.Q) THEN
-	//LogToWarning(msgFmtStr := 'Sending: %s', messageArg := messageToServer);
-	finalSendMsg := CONCAT('CRISTART ', CONCAT(INT_TO_STRING(sendCounter), ' CMD Enable CRIEND'));
-	sendCounter := (sendCounter MOD 9999) + 1;
+//IF (connectTrigger.Q) THEN
+//	client.BindReceiveMessage(variableToBind := messageFromServer);
+//	client.Enable();
 	
-	client.Send(messageToSend := finalSendMsg);
+//END_IF
 
+//IF (disconnectTrigger.Q) THEN
+//	client.Disable();
+//END_IF
+
+//IF (sendTrigger.Q) THEN
 //	client.Send(messageToSend := messageToServer);
-END_IF
-// === ===
+//END_IF
 
-// === Heartbeat ===
+//IF (debugSendTrigger.Q) THEN
+//	debugMessageToServer := AddCounterToMessage(counter := sendCounter, message := messageToServer);
+//	client.Send(messageToSend := debugMessageToServer);
+//END_IF
 
-heartbeatTimer(IN := TRUE, PT := heartbeatInterval);
+//IF (connectToRobotTrigger.Q) THEN
+//	client.Send(messageToSend := AddCounterToMessage(counter := sendCounter, message := 'CMD Connect'));
+//	sendCounter := (sendCounter MOD 9999) + 1;
+//	isHeartbeatEnabled := TRUE;
+//END_IF
 
-IF (heartbeatTimer.Q AND client.IsClientEnabled) THEN
-	heartbeatTimer(IN := FALSE);
+//IF (enableMotorsTrigger.Q) THEN
+//	client.Send(messageToSend := AddCounterToMessage(counter := sendCounter, message := message.EnableMessage));
+//	sendCounter := (sendCounter MOD 9999) + 1;
+//END_IF
+
+//IF (client.NewMessageAvailable(clearFlag := TRUE)) THEN
+//	//Update history
+//	IF (currentHistoryIndex >= GVL_Constants.MAX_HISTORY_SIZE) THEN
+//		//Ran out of history space, discard youngest member
+//		currentHistoryIndex := GVL_Constants.MAX_HISTORY_SIZE;
+//		ShiftHistoryLeft(arr := messageHistoryArray);
+//	ELSE
+//		//Can still append
+//		currentHistoryIndex := currentHistoryIndex + 1;
+//	END_IF
 	
-	finalAliveMessage := CONCAT('CRISTART ', CONCAT(INT_TO_STRING(sendCounter), message.AliveDemo));
-	client.Send(messageToSend := finalAliveMessage);
-	sendCounter := (sendCounter MOD 9999) + 1;
-END_IF
-// === ===
+//	//Add new entry
+//	currentMessageLogData.message := messageFromServer;	
+//	currentMessageLogData.systemTimeString := SYSTEMTIME_TO_STRING(in := currentTime);
+//	messageHistoryArray[currentHistoryIndex - 1] := currentMessageLogData;
+//END_IF
+//// === ===
 
-client();
+//// === Heartbeat ===
+//heartbeatTimer(IN := isHeartbeatEnabled, PT := heartbeatInterval);
 
-]]></ST>
+//IF (heartbeatTimer.Q AND client.IsClientEnabled) THEN
+//	heartbeatTimer(IN := FALSE);
+	
+//	client.Send(messageToSend := AddCounterToMessage(sendCounter, message.AliveDemo));
+//	ADSLOGSTR(msgCtrlMask := ADSLOG_MSGTYPE_ERROR, msgFmtStr := AddCounterToMessage(sendCounter, message.AliveDemo), '');	//TODO: REMOVE
+//	sendCounter := (sendCounter MOD 9999) + 1;
+//END_IF
+//// === ===
+
+//client(totalMessagesReceived => totalMessagesFromServerCount);]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="321" Count="29" />
-      <LineId Id="389" Count="0" />
-      <LineId Id="388" Count="0" />
-      <LineId Id="391" Count="2" />
-      <LineId Id="351" Count="1" />
-      <LineId Id="381" Count="0" />
-      <LineId Id="354" Count="0" />
-      <LineId Id="372" Count="0" />
-      <LineId Id="380" Count="0" />
-      <LineId Id="373" Count="3" />
-      <LineId Id="383" Count="1" />
-      <LineId Id="377" Count="0" />
-      <LineId Id="385" Count="0" />
-      <LineId Id="378" Count="0" />
-      <LineId Id="355" Count="2" />
-      <LineId Id="369" Count="0" />
-      <LineId Id="95" Count="0" />
+      <LineId Id="832" Count="21" />
+      <LineId Id="917" Count="0" />
+      <LineId Id="929" Count="4" />
+      <LineId Id="928" Count="0" />
+      <LineId Id="854" Count="11" />
+      <LineId Id="871" Count="1" />
+      <LineId Id="945" Count="3" />
+      <LineId Id="944" Count="0" />
+      <LineId Id="873" Count="5" />
+      <LineId Id="935" Count="0" />
+      <LineId Id="934" Count="0" />
+      <LineId Id="936" Count="0" />
+      <LineId Id="943" Count="0" />
+      <LineId Id="937" Count="0" />
+      <LineId Id="884" Count="30" />
+      <LineId Id="729" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

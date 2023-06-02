@@ -11,8 +11,43 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"286"</v>
+              <v n="TextDefault">"Connect To Robot"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"403"</v>
+              <v n="TextDefault">"Debug Send"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"428"</v>
               <v n="TextDefault">"Disconnect"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"622"</v>
+              <v n="TextDefault">"Enable Motors"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"229"</v>
+              <v n="TextDefault">"History"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"290"</v>
+              <v n="TextDefault">"Message"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"597"</v>
+              <v n="TextDefault">"Messages received: %d"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"193"</v>
+              <v n="TextDefault">"Receive History"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -23,6 +58,16 @@
             <o>
               <v n="TextID">"222"</v>
               <v n="TextDefault">"Server: %s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"529"</v>
+              <v n="TextDefault">"Status: %s"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"256"</v>
+              <v n="TextDefault">"Time"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
           </l>

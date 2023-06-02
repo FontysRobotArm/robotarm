@@ -4,9 +4,9 @@
     <Declaration><![CDATA[// Pre-made robot messages
 TYPE Message :
 STRUCT CONSTANT
-	Connect : STRING(30) := 'CRISTART 1 CMD Connect CRIEND';
-	AliveDemo : STRING(63) := 'ALIVEJOG 40.0 50.0 40.0 30.0 30.0 0.0 0.0 0.0 0.0 CRIEND';	//Do not use, only for testing!
-	EnableDemo : STRING(80) := 'CRISTART CMD';
+	Connect : STRING(30) := 'CMD Connect';
+	AliveDemo : STRING(63) := 'ALIVEJOG 40.0 50.0 40.0 30.0 30.0 0.0 0.0 0.0 0.0';	//Do not use, only for testing!
+	EnableMessage : STRING(80) := 'CMD Enable';
 END_STRUCT
 END_TYPE
 ]]></Declaration>

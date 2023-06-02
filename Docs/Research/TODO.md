@@ -4,5 +4,6 @@
 - [ ] String splitting
 - [x] Determine end of message
 - [x] Set Ip via property
-- [ ] Message splitting via CRISTART/END
-- [ ] Count responses
+- [ ] Message splitting via CRISTART/END in Receive
+- [x] Count responses
+- [x] Message History
