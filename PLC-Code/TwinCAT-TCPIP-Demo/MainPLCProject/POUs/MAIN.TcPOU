@@ -42,7 +42,7 @@ VAR
 	closeAll : BOOL := TRUE;	//Close all on initial startup
 	
 	//messageToServer : T_MaxString := 'CRISTART 1 CMD Connect CRIEND';
-	messageToServer : T_MaxString := 'VAR Joint 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0';
+	messageToServer : T_MaxString := 'Hello world 2.0 CRIEND';
 	debugMessageToServer : T_MaxString := 'VAR Joint 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0';
 	messageFromServer : STRING(GVL_Constants.MAX_RECEIVE_MESSAGE_LENGTH) := '';
 	//finalSendMsg : STRING(100);
@@ -70,97 +70,97 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[////On PLC reset/program download, close all connections
-//IF (closeAll) THEN	
-//	closeAll := FALSE;
-//	closeAllConnections(sSrvNetId := '', bExecute := TRUE, tTimeout := T#10S);
-//ELSE
-//	closeAllConnections(bExecute := FALSE);
-//END_IF
+      <ST><![CDATA[//On PLC reset/program download, close all connections
+IF (closeAll) THEN	
+	closeAll := FALSE;
+	closeAllConnections(sSrvNetId := '', bExecute := TRUE, tTimeout := T#10S);
+ELSE
+	closeAllConnections(bExecute := FALSE);
+END_IF
 
-//IF (closeAllConnections.bBusy) THEN
-//	RETURN;	//Do not continue the program until all connections are closed
-//END_IF
+IF (closeAllConnections.bBusy) THEN
+	RETURN;	//Do not continue the program until all connections are closed
+END_IF
 
-//// === ===
+// === ===
 
-//// === UI Handling ===
-//LocalSystemTime(bEnable := TRUE, tTimeout := T#1S, systemTime => currentTime);
+// === UI Handling ===
+LocalSystemTime(bEnable := TRUE, tTimeout := T#1S, systemTime => currentTime);
 
-//connectTrigger(CLK := buttonConnectPressed);
-//disconnectTrigger(CLK := buttonDisconnectPressed);
-//sendTrigger(CLK := buttonSendPressed);
-//connectToRobotTrigger(CLK := buttonConnectToRobotPressed);
-//debugSendTrigger(CLK := buttonDebugSendPressed);
-//enableMotorsTrigger(CLK := buttonEnableMotorsPressed);
+connectTrigger(CLK := buttonConnectPressed);
+disconnectTrigger(CLK := buttonDisconnectPressed);
+sendTrigger(CLK := buttonSendPressed);
+connectToRobotTrigger(CLK := buttonConnectToRobotPressed);
+debugSendTrigger(CLK := buttonDebugSendPressed);
+enableMotorsTrigger(CLK := buttonEnableMotorsPressed);
 
-//IF (client.IsConnected) THEN
-//	connectionMessage := 'Connected';
-//ELSE
-//	connectionMessage := 'Disconnected';
-//END_IF
+IF (client.IsConnected) THEN
+	connectionMessage := 'Connected';
+ELSE
+	connectionMessage := 'Disconnected';
+END_IF
 
-//IF (connectTrigger.Q) THEN
-//	client.BindReceiveMessage(variableToBind := messageFromServer);
-//	client.Enable();
+IF (connectTrigger.Q) THEN
+	client.BindReceiveMessage(variableToBind := messageFromServer);
+	client.Enable();
 	
-//END_IF
+END_IF
 
-//IF (disconnectTrigger.Q) THEN
-//	client.Disable();
-//END_IF
+IF (disconnectTrigger.Q) THEN
+	client.Disable();
+END_IF
 
-//IF (sendTrigger.Q) THEN
-//	client.Send(messageToSend := messageToServer);
-//END_IF
+IF (sendTrigger.Q) THEN
+	client.Send(messageToSend := messageToServer);
+END_IF
 
-//IF (debugSendTrigger.Q) THEN
-//	debugMessageToServer := AddCounterToMessage(counter := sendCounter, message := messageToServer);
-//	client.Send(messageToSend := debugMessageToServer);
-//END_IF
+IF (debugSendTrigger.Q) THEN
+	debugMessageToServer := AddCounterToMessage(counter := sendCounter, message := messageToServer);
+	client.Send(messageToSend := debugMessageToServer);
+END_IF
 
-//IF (connectToRobotTrigger.Q) THEN
-//	client.Send(messageToSend := AddCounterToMessage(counter := sendCounter, message := 'CMD Connect'));
-//	sendCounter := (sendCounter MOD 9999) + 1;
-//	isHeartbeatEnabled := TRUE;
-//END_IF
+IF (connectToRobotTrigger.Q) THEN
+	client.Send(messageToSend := AddCounterToMessage(counter := sendCounter, message := 'CMD Connect'));
+	sendCounter := (sendCounter MOD 9999) + 1;
+	isHeartbeatEnabled := TRUE;
+END_IF
 
-//IF (enableMotorsTrigger.Q) THEN
-//	client.Send(messageToSend := AddCounterToMessage(counter := sendCounter, message := message.EnableMessage));
-//	sendCounter := (sendCounter MOD 9999) + 1;
-//END_IF
+IF (enableMotorsTrigger.Q) THEN
+	client.Send(messageToSend := AddCounterToMessage(counter := sendCounter, message := message.EnableMessage));
+	sendCounter := (sendCounter MOD 9999) + 1;
+END_IF
 
-//IF (client.NewMessageAvailable(clearFlag := TRUE)) THEN
-//	//Update history
-//	IF (currentHistoryIndex >= GVL_Constants.MAX_HISTORY_SIZE) THEN
-//		//Ran out of history space, discard youngest member
-//		currentHistoryIndex := GVL_Constants.MAX_HISTORY_SIZE;
-//		ShiftHistoryLeft(arr := messageHistoryArray);
-//	ELSE
-//		//Can still append
-//		currentHistoryIndex := currentHistoryIndex + 1;
-//	END_IF
+IF (client.NewMessageAvailable(clearFlag := TRUE)) THEN
+	//Update history
+	IF (currentHistoryIndex >= GVL_Constants.MAX_HISTORY_SIZE) THEN
+		//Ran out of history space, discard youngest member
+		currentHistoryIndex := GVL_Constants.MAX_HISTORY_SIZE;
+		ShiftHistoryLeft(arr := messageHistoryArray);
+	ELSE
+		//Can still append
+		currentHistoryIndex := currentHistoryIndex + 1;
+	END_IF
 	
-//	//Add new entry
-//	currentMessageLogData.message := messageFromServer;	
-//	currentMessageLogData.systemTimeString := SYSTEMTIME_TO_STRING(in := currentTime);
-//	messageHistoryArray[currentHistoryIndex - 1] := currentMessageLogData;
-//END_IF
-//// === ===
+	//Add new entry
+	currentMessageLogData.message := messageFromServer;	
+	currentMessageLogData.systemTimeString := SYSTEMTIME_TO_STRING(in := currentTime);
+	messageHistoryArray[currentHistoryIndex - 1] := currentMessageLogData;
+END_IF
+// === ===
 
-//// === Heartbeat ===
-//heartbeatTimer(IN := isHeartbeatEnabled, PT := heartbeatInterval);
+// === Heartbeat ===
+heartbeatTimer(IN := isHeartbeatEnabled, PT := heartbeatInterval);
 
-//IF (heartbeatTimer.Q AND client.IsClientEnabled) THEN
-//	heartbeatTimer(IN := FALSE);
+IF (heartbeatTimer.Q AND client.IsClientEnabled) THEN
+	heartbeatTimer(IN := FALSE);
 	
-//	client.Send(messageToSend := AddCounterToMessage(sendCounter, message.AliveDemo));
-//	ADSLOGSTR(msgCtrlMask := ADSLOG_MSGTYPE_ERROR, msgFmtStr := AddCounterToMessage(sendCounter, message.AliveDemo), '');	//TODO: REMOVE
-//	sendCounter := (sendCounter MOD 9999) + 1;
-//END_IF
-//// === ===
+	client.Send(messageToSend := AddCounterToMessage(sendCounter, message.AliveDemo));
+	ADSLOGSTR(msgCtrlMask := ADSLOG_MSGTYPE_ERROR, msgFmtStr := AddCounterToMessage(sendCounter, message.AliveDemo), '');	//TODO: REMOVE
+	sendCounter := (sendCounter MOD 9999) + 1;
+END_IF
+// === ===
 
-//client(totalMessagesReceived => totalMessagesFromServerCount);]]></ST>
+client(totalMessagesReceived => totalMessagesFromServerCount);]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="832" Count="21" />

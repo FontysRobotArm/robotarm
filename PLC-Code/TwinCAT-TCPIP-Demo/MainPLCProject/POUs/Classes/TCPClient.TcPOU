@@ -55,7 +55,8 @@ VAR
 	m_receiveTimeout : TIME := T#1M;
 	m_readInterval : TIME := T#10MS;
 //	m_receiveMessageDelimiter : BYTE := F_ToASC(';');	//Note: Use plain 0 (without F_ToASC()) for \0
-	m_receiveMessageDelimiter : BYTE := 0;	//'\0'
+	m_receiveMessageDelimiter : BYTE := 0;	//'\0'	//Not used currently
+	m_delimiterString : STRING(80) := 'CRIEND';	//TODO: Make settable via property
 	m_receivedMessage : T_MaxString := '';
 	m_receiveStatus : ReceiveStatus;
 	m_newDataAvailable : BOOL := FALSE;	//Reset to false when it is read
@@ -112,7 +113,7 @@ CASE m_currentState OF
 	ClientState.RECEIVING:
 		m_receiveStatus := Receive(timeout := m_receiveTimeout, 
 									readInterval := m_readInterval, 
-									messageDelimiter := m_receiveMessageDelimiter,
+									messageDelimiter := m_receiveMessageDelimiter,	//Currently not used
 									errorId => m_receiveErrorId);
 		
 		IF (m_receiveStatus <> ReceiveStatus.RECEIVING) THEN
@@ -257,6 +258,8 @@ VAR
 	startPosition : UDINT := 0;	//Can stay, assigned before used
 	endPosition : UDINT := 0;	//Can stay, assigned before used
 	currentFrameLength : UDINT := 0; // Length of string received this cycle	//Should be fine
+	posOfDelimiter : UDINT := 0;
+	
 	
 	index : UDINT := 0;	//For-loop index
 	
@@ -307,28 +310,44 @@ CASE m_receiveDataExchangeState OF
 				currentFrameLength := 0;
 				//Only proceed if we have enough space
 				IF (m_totalBytesReceived < SIZEOF(m_messageReceivedRef)) THEN
-//				IF (m_totalBytesReceived < MAX_RECEIVE_MESSAGE_LENGTH) THEN
-
 					m_receiveTimer (PT := T#0MS); //Read asap
 					//Bytes received, disable timeout check
 					m_isReceiveTimeoutEnabled := FALSE;
 					//Search for end of message delimiter
-					FOR index := startPosition TO endPosition BY 1 DO
-						IF (m_receiveBuffer[index] = messageDelimiter) THEN	//End of message check
-							//End of message received
-							currentFrameLength := index + 1;
+					posOfDelimiter := INT_TO_UDINT(FIND(STR1 := m_receiveBuffer, STR2 := m_delimiterString));
+					
+					IF (posOfDelimiter = 0) THEN
+						//Delimiter not found
+						LogToWarning('Delim not found', '');
+						RETURN;
+					END_IF
+					
+					currentFrameLength := posOfDelimiter + 6{delimiter size} - 1;
+					MEMCPY(destAddr := ADR(m_messageReceivedRef), srcAddr := ADR(m_receiveBuffer), n := currentFrameLength);
+					MEMSET(destAddr := ADR(m_receiveBuffer), fillByte := 0, n := SIZEOF(m_receiveBuffer));	//Clear buffer
+					m_totalBytesReceived := 0;
+					
+					//All received
+					Receive := ReceiveStatus.DONE;
+					m_receiveDataExchangeState := DataExchangeState.IDLE;
+					//OLD Find TODO: Find a way to implement via a function? So that you can use both
+//					FOR index := startPosition TO endPosition BY 1 DO
+//						IF (m_receiveBuffer[index] = messageDelimiter) THEN	//End of message check
+//							//End of message received
+//							currentFrameLength := index + 1;
 							
-							MEMCPY(destAddr := ADR(m_messageReceivedRef), srcAddr := ADR(m_receiveBuffer), n := currentFrameLength);
-							//Move the remaining data bytes to the begining
-							MEMMOVE(ADR(m_receiveBuffer), ADR(m_receiveBuffer[currentFrameLength]), m_totalBytesReceived - currentFrameLength); 
-							//Recalculate remaining data byte length
-							m_totalBytesReceived := m_totalBytesReceived - currentFrameLength;
-							//All received
-							Receive := ReceiveStatus.DONE;
-							m_receiveDataExchangeState := DataExchangeState.IDLE;
-							EXIT;
-						END_IF
-					END_FOR
+//							MEMCPY(destAddr := ADR(m_messageReceivedRef), srcAddr := ADR(m_receiveBuffer), n := currentFrameLength);
+//							//Move the remaining data bytes to the begining
+//							MEMMOVE(ADR(m_receiveBuffer), ADR(m_receiveBuffer[currentFrameLength]), m_totalBytesReceived - currentFrameLength); 
+//							//Recalculate remaining data byte length
+//							m_totalBytesReceived := m_totalBytesReceived - currentFrameLength;
+//							//All received
+//							Receive := ReceiveStatus.DONE;
+//							m_receiveDataExchangeState := DataExchangeState.IDLE;
+//							EXIT;
+//						END_IF
+//					END_FOR
+
 				ELSE	
 					//No more space in the receive object
 					Receive := ReceiveStatus.FAIL;
@@ -524,12 +543,26 @@ END_CASE
     </LineIds>
     <LineIds Name="TCPClient.Receive">
       <LineId Id="1464" Count="42" />
-      <LineId Id="1508" Count="1" />
-      <LineId Id="1597" Count="1" />
-      <LineId Id="1510" Count="7" />
+      <LineId Id="1508" Count="5" />
+      <LineId Id="1630" Count="0" />
+      <LineId Id="1635" Count="1" />
+      <LineId Id="1646" Count="0" />
+      <LineId Id="1680" Count="0" />
+      <LineId Id="1662" Count="0" />
+      <LineId Id="1640" Count="0" />
+      <LineId Id="1637" Count="0" />
+      <LineId Id="1664" Count="1" />
+      <LineId Id="1684" Count="0" />
+      <LineId Id="1668" Count="0" />
+      <LineId Id="1676" Count="2" />
+      <LineId Id="1663" Count="0" />
+      <LineId Id="1629" Count="0" />
+      <LineId Id="1514" Count="3" />
       <LineId Id="1601" Count="0" />
       <LineId Id="1518" Count="2" />
-      <LineId Id="1522" Count="14" />
+      <LineId Id="1522" Count="7" />
+      <LineId Id="1686" Count="0" />
+      <LineId Id="1530" Count="6" />
       <LineId Id="1538" Count="3" />
       <LineId Id="1567" Count="0" />
       <LineId Id="1542" Count="21" />
