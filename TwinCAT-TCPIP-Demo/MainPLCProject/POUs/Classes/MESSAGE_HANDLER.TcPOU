@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MESSAGE_HANDLER" Id="{cecd83f7-e4a9-49f7-90f6-0559911ae2a8}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC MESSAGE_HANDLER
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="FB_init" Id="{41bad200-18a1-4836-8342-c3c28d45b7d8}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+
+	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RECEIVE_MONARCO" Id="{78c542ba-baf7-44bd-af8a-e3d9e7bebe82}">
+      <Declaration><![CDATA[METHOD PUBLIC RECEIVE_MONARCO : INT
+VAR_INPUT
+	FULL_STRING : STRING;
+END_VAR
+VAR
+	FOUND_SEPARATOR : BOOL;
+	COMMAND_CMD : STRING := 'CMD';
+	COMMAND_VAR : STRING := 'VAR';
+	count : INT := 0;
+	MESSAGE_ARRAY : ARRAY[1..4] OF STRING;
+	
+	SeparatorChar : STRING := ' ';
+	tempString : STRING := '';
+	stringLeft : STRING := '';
+	stringLeftSize : UDINT := 999;
+	stringRight : STRING := '';
+	stringRightSize : UDINT := 999;
+END_VAR
+VAR_OUTPUT
+	ERROR : INT := 0;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// save received string into changeble variable.
+
+tempString := FULL_STRING;
+
+FOR count := 1 TO 4 BY 1 DO
+	FOUND_SEPARATOR := FindAndSplitChar(
+		sSeparatorChar := SeparatorChar, 	// split when this char found
+		pSrcString := ADR(tempString), 		// string that will be split
+		pLeftString := ADR(stringLeft), 	// first string (left) (FIRST WORD)
+		nLeftSize := stringLeftSize, 		// first string size (right)
+		pRightString := ADR(stringRight), 	// second string (right) (REST OF STRING)
+		nRightSize := stringRightSize, 		// second string size (right)
+		bSearchFromright := FALSE);			// when false start searching from the left
+		
+	IF FOUND_SEPARATOR THEN
+		MESSAGE_ARRAY[count] := stringLeft; // saving the left string in message_array.
+		tempString := stringRight; // saving the rest of the string for the next split.
+	ELSE // ERROR: the separator char could not be found.
+		MESSAGE_ARRAY[count] := tempString; // saving the string in case it was the last word.
+		ERROR := count; 
+		count := 10;
+	END_IF
+END_FOR
+
+IF (ERROR = 2 OR ERROR = 4) THEN // handle message_array when CMD or VAR was the command.
+	ERROR := 0;
+	IF (MESSAGE_ARRAY[1] = COMMAND_CMD) THEN // when CMD was the command.
+		GVL.ReceivedCMD := MESSAGE_ARRAY[2];
+	ELSIF (MESSAGE_ARRAY[1] = COMMAND_VAR) THEN // when VAR was the command.
+		GVL.VarName := MESSAGE_ARRAY[2];
+		GVL.VarType := MESSAGE_ARRAY[3];
+		GVL.VarValue := MESSAGE_ARRAY[4];
+	ELSE
+		ERROR := 5; // ERROR: neither CMD or VAR was red.
+	END_IF
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RECEIVE_ROBOT" Id="{1a8a5906-8e8f-458d-9495-37720deb89d0}">
+      <Declaration><![CDATA[METHOD PUBLIC RECEIVE_ROBOT : INT
+VAR_INPUT
+	FULL_STRING : STRING;
+END_VAR
+VAR
+	tempString : STRING;
+	SeparatorChar : STRING := ' ';
+	stringLeft : STRING;
+	stringLeftSize : UDINT := 999;
+	stringRight : STRING;
+	stringRightSize : UDINT := 999;
+	foundSeparator : BOOL;
+	
+	stepCount : INT;
+END_VAR
+VAR_OUTPUT
+	ERROR : INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[tempString := FULL_STRING;
+FOR stepCount := 0 TO 200 BY 1 DO
+	foundSeparator := FindAndSplitChar( // SEPERATE THE STRING, FIRST WORD -- REST OF STRING
+		sSeparatorChar := SeparatorChar, 	// split when this char found
+		pSrcString := ADR(tempString), 		// string that will be split
+		pLeftString := ADR(stringLeft), 	// first string (left) (FIRST WORD)
+		nLeftSize := stringLeftSize, 		// first string size (right)
+		pRightString := ADR(stringRight), 	// second string (right) (REST OF STRING)
+		nRightSize := stringRightSize, 		// second string size (right)
+		bSearchFromright := FALSE);			// when false start searching from the left
+	IF (stringRight = 'CRIEND') THEN // CHECK FOR ENDING
+		GVL.ReceivedStringArray[stepCount] := stringLeft;
+		GVL.ReceivedStringArray[stepCount + 1] := stringRight;
+		GVL.ReceivedStringWordCounter := (stepCount + 1);
+		stepCount := 210;
+		ERROR := 0;
+	ELSE // OTHERWISE SAVE SEPPERATED VAR AND CONTINUE
+		IF (foundSeparator) THEN // CHECK FOR ERROR
+			tempString := stringRight;
+			GVL.ReceivedStringArray[stepCount] := stringLeft;
+		ELSE // ERROR OCCURED, COULD NOT FIND SEPARATOR
+			stepCount := 210;
+			ERROR := 3;
+		END_IF 
+	END_IF 
+END_FOR
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="MESSAGE_HANDLER">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="MESSAGE_HANDLER.FB_init">
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="MESSAGE_HANDLER.RECEIVE_MONARCO">
+      <LineId Id="39" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="5" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="96" Count="2" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="101" Count="1" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="116" Count="1" />
+      <LineId Id="114" Count="1" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="31" Count="0" />
+    </LineIds>
+    <LineIds Name="MESSAGE_HANDLER.RECEIVE_ROBOT">
+      <LineId Id="19" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="35" Count="6" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="44" Count="2" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="58" Count="1" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="51" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

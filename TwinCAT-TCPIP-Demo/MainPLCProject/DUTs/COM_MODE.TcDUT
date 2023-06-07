@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="COM_MODE" Id="{3d973a47-99b6-4985-8d9b-663dc3e02dd8}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE COM_MODE :
+(
+	Robot,
+	Monarco
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

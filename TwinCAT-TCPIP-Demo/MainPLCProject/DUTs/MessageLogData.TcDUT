@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="MessageLogData" Id="{f841d01b-cf50-4f42-ade8-782f29f8e737}">
+    <Declaration><![CDATA[TYPE MessageLogData :
+STRUCT
+	systemTimeString : T_MaxString := '';
+	message : STRING(GVL_Constants.MAX_RECEIVE_MESSAGE_LENGTH) := '';
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

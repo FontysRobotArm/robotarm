@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="Command" Id="{03c54385-7ad2-49c8-9d62-38d6e73241e0}">
+    <Declaration><![CDATA[TYPE Command :
+STRUCT CONSTANT
+	Start : STRING(9) := 'CRISTART';
+	End : STRING(7) := 'CRIEND';
+	MovementVar : STRING(4) := 'VAR';
+	Heartbeat : STRING(9) := 'ALIVEJOG';
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
