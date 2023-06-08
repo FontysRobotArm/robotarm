@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="RobotData" Id="{ba5a1984-06db-40e2-af22-f49ed11fba5f}">
+    <Declaration><![CDATA[TYPE RobotData :
+STRUCT
+	//Variables will be manipulated by Unity via ADS
+	targetX : INT;
+	targetY : INT;
+	targetZ : INT;	
+	velocity : INT;	//Global value for all joints
+	
+	joint0 : Joint;
+	joint1 : Joint;
+	joint2 : Joint;
+	joint3 : Joint;
+	joint4 : Joint;
+	
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

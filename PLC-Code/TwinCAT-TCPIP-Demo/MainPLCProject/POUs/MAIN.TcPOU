@@ -12,6 +12,8 @@ VAR CONSTANT
 	ROBOT_IP : T_IPv4Addr := '192.168.3.11';
 	ROBOT_PORT : UDINT := 3920;
 	
+	MONARCO_IP : T_IPv4Addr := '192.168.3.125';
+	MONARCO_PORT : UDINT := 8080;
 	//TODO: Remove? not used anywhere afaik
 	command : Command := ();
 	message : Message := ();
@@ -24,6 +26,7 @@ VAR
 	buttonConnectToRobotPressed : BOOL;
 	buttonDebugSendPressed : BOOL;
 	buttonEnableMotorsPressed : BOOL;
+	buttonDisableMotorsPressed : BOOL;
 	
 	connectTrigger : R_TRIG;
 	disconnectTrigger : R_TRIG;
@@ -31,12 +34,13 @@ VAR
 	connectToRobotTrigger : R_TRIG;
 	debugSendTrigger : R_TRIG;
 	enableMotorsTrigger : R_TRIG;
+	disableMotorsTrigger : R_TRIG;
 	
-	client : TCPClient(LOCAL_IP, LOCAL_PORT, isEnabled := FALSE);
+	client : TCPClient(ROBOT_IP, ROBOT_PORT, isEnabled := FALSE);
 	LocalSystemTime : FB_LocalSystemTime;
 	
 	// COMMUNICATION message handling
-	MessageBase : COMMUNICATION(CommunicationMODE := COM_MODE.Monarco);
+	MessageBase : COMMUNICATION(CommunicationMODE := COM_MODE.Robot);
 	messageHandler : MESSAGE_HANDLER();
 	MessageERROR : int := 0;
 	//
@@ -67,11 +71,8 @@ VAR
 	currentMessageLogData : MessageLogData;
 	
 	//Testing
+	dummyHeartbeatValues : STRING(80) := '40.0 50.0 40.0 30.0 30.0 0.0 0.0 0.0 0.0';
 	
-	executed : BOOL := FALSE;
-	test : UDINT;
-	test2 : UDINT;
-	test3 : UDINT;
 
 END_VAR
 ]]></Declaration>
@@ -99,6 +100,7 @@ sendTrigger(CLK := buttonSendPressed);
 connectToRobotTrigger(CLK := buttonConnectToRobotPressed);
 debugSendTrigger(CLK := buttonDebugSendPressed);
 enableMotorsTrigger(CLK := buttonEnableMotorsPressed);
+disableMotorsTrigger(CLK := buttonDisableMotorsPressed);
 
 IF (client.IsConnected) THEN
 	connectionMessage := 'Connected';
@@ -110,12 +112,12 @@ IF (connectTrigger.Q) THEN
 	CASE MessageBase.COMMUNICATION_MODE OF
 	// check for communication mode and set IP for this mode.
 		COM_MODE.Robot:
-			client.RemoteServerAddress := LOCAL_IP;
-			client.RemoteServerPort := LOCAL_PORT;
-		
-		COM_MODE.Monarco:
 			client.RemoteServerAddress := ROBOT_IP;
 			client.RemoteServerPort := ROBOT_PORT;
+		
+		COM_MODE.Monarco:
+			client.RemoteServerAddress := MONARCO_IP;
+			client.RemoteServerPort := MONARCO_PORT;
 	END_CASE
 	client.BindReceiveMessage(variableToBind := messageFromServer);
 	client.Enable();
@@ -145,6 +147,10 @@ CASE MessageBase.COMMUNICATION_MODE OF
 
 		IF (enableMotorsTrigger.Q) THEN
 			client.Send(messageToSend := MessageBase.CREATE(COMMAND := 'CMD', COMMAND_DETAILS := 'Enable', ERROR => MessageERROR));
+		END_IF
+		
+		IF (disableMotorsTrigger.Q) THEN
+			client.Send(messageToSend := MessageBase.CREATE(COMMAND := 'CMD', COMMAND_DETAILS := 'Disable', ERROR => MessageERROR));
 		END_IF
 //		
 	COM_MODE.Monarco:
@@ -187,17 +193,23 @@ heartbeatTimer(IN := isHeartbeatEnabled, PT := heartbeatInterval);
 IF (heartbeatTimer.Q AND client.IsClientEnabled) THEN
 	heartbeatTimer(IN := FALSE);
 	//TODO: Actual values
-	client.Send(messageToSend := MessageBase.CREATE('ALIVEJOG', '40.0 50.0 40.0 30.0 30.0 0.0 0.0 0.0 0.0', ERROR => MessageERROR));
+	dummyHeartbeatValues := '40.0 50.0 40.0 30.0 30.0 0.0 0.0 0.0 0.0';
+	client.Send(messageToSend := MessageBase.CREATE('ALIVEJOG', dummyHeartbeatValues, ERROR => MessageERROR));
 END_IF
 // === ===
 
 client(totalMessagesReceived => totalMessagesFromServerCount);]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="1090" Count="53" />
+      <LineId Id="1090" Count="22" />
+      <LineId Id="1284" Count="0" />
+      <LineId Id="1113" Count="30" />
       <LineId Id="1204" Count="0" />
-      <LineId Id="1144" Count="54" />
+      <LineId Id="1144" Count="14" />
+      <LineId Id="1359" Count="3" />
+      <LineId Id="1159" Count="39" />
       <LineId Id="1203" Count="0" />
+      <LineId Id="1280" Count="0" />
       <LineId Id="1199" Count="3" />
       <LineId Id="729" Count="0" />
     </LineIds>

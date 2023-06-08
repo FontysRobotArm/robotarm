@@ -12,6 +12,8 @@ VAR_GLOBAL
 	VarType : STRING := '';
 	VarName : STRING := '';
 	//
+	
+	robotData : RobotData;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

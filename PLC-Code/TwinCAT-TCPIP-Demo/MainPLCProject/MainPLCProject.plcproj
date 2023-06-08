@@ -38,6 +38,12 @@
     <Compile Include="DUTs\ReceiveStatus.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\Robot Structs\Joint.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Robot Structs\RobotData.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\SendStatus.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -91,6 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DUTs" />
+    <Folder Include="DUTs\Robot Structs" />
     <Folder Include="GVLs" />
     <Folder Include="POUs\Classes" />
     <Folder Include="POUs\Helpers" />
