@@ -12,9 +12,9 @@ VAR CONSTANT
 	ROBOT_IP : T_IPv4Addr := '192.168.3.11';
 	ROBOT_PORT : UDINT := 3920;
 	
+	//TODO: Remove? not used anywhere afaik
 	command : Command := ();
 	message : Message := ();
-	//endHistoryIndex : BYTE := 9;
 
 END_VAR
 VAR
@@ -34,6 +34,12 @@ VAR
 	
 	client : TCPClient(LOCAL_IP, LOCAL_PORT, isEnabled := FALSE);
 	LocalSystemTime : FB_LocalSystemTime;
+	
+	// COMMUNICATION message handling
+	MessageBase : COMMUNICATION(CommunicationMODE := COM_MODE.Monarco);
+	messageHandler : MESSAGE_HANDLER();
+	MessageERROR : int := 0;
+	//
 	
 	connectionMessage : STRING(20) := 'Disconnected';
 	isHeartbeatEnabled : BOOL := FALSE;
@@ -101,35 +107,59 @@ ELSE
 END_IF
 
 IF (connectTrigger.Q) THEN
+	CASE MessageBase.COMMUNICATION_MODE OF
+	// check for communication mode and set IP for this mode.
+		COM_MODE.Robot:
+			client.RemoteServerAddress := LOCAL_IP;
+			client.RemoteServerPort := LOCAL_PORT;
+		
+		COM_MODE.Monarco:
+			client.RemoteServerAddress := ROBOT_IP;
+			client.RemoteServerPort := ROBOT_PORT;
+	END_CASE
 	client.BindReceiveMessage(variableToBind := messageFromServer);
 	client.Enable();
-	
 END_IF
 
 IF (disconnectTrigger.Q) THEN
 	client.Disable();
 END_IF
 
-IF (sendTrigger.Q) THEN
-	client.Send(messageToSend := messageToServer);
-END_IF
+// === Message Sending ===
+CASE MessageBase.COMMUNICATION_MODE OF
+	COM_MODE.Robot:
+// ROBOT COM
+		IF (sendTrigger.Q) THEN  // debug: send move command to robot.
+			//TODO: Rework to use +- buttons (like in the C# application)
+			client.Send(messageToSend := MessageBase.CREATE(COMMAND := 'VAR', COMMAND_DETAILS := 'Joint 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0', ERROR => MessageERROR));
+		END_IF
 
-IF (debugSendTrigger.Q) THEN
-	debugMessageToServer := AddCounterToMessage(counter := sendCounter, message := messageToServer);
-	client.Send(messageToSend := debugMessageToServer);
-END_IF
+		IF (debugSendTrigger.Q) THEN // debug: not in use yet.
+			client.Send(messageToSend := MessageBase.CREATE(COMMAND := '', COMMAND_DETAILS := '', ERROR => MessageERROR));
+		END_IF
 
-IF (connectToRobotTrigger.Q) THEN
-	client.Send(messageToSend := AddCounterToMessage(counter := sendCounter, message := 'CMD Connect'));
-	sendCounter := (sendCounter MOD 9999) + 1;
-	isHeartbeatEnabled := TRUE;
-END_IF
+		IF (connectToRobotTrigger.Q) THEN
+			client.Send(messageToSend := MessageBase.CREATE(COMMAND := 'CMD', COMMAND_DETAILS := 'Connect', ERROR => MessageERROR));
+			isHeartbeatEnabled := TRUE;
+		END_IF
 
-IF (enableMotorsTrigger.Q) THEN
-	client.Send(messageToSend := AddCounterToMessage(counter := sendCounter, message := message.EnableMessage));
-	sendCounter := (sendCounter MOD 9999) + 1;
-END_IF
+		IF (enableMotorsTrigger.Q) THEN
+			client.Send(messageToSend := MessageBase.CREATE(COMMAND := 'CMD', COMMAND_DETAILS := 'Enable', ERROR => MessageERROR));
+		END_IF
+//		
+	COM_MODE.Monarco:
+// MONARCO COM
+		IF (sendTrigger.Q) THEN 
+			client.Send(messageToSend := MessageBase.CREATE(COMMAND := 'CMD', COMMAND_DETAILS := 'LED_ON', ERROR => MessageERROR));
+		END_IF
 
+		IF (debugSendTrigger.Q) THEN
+			client.Send(messageToSend := MessageBase.CREATE(COMMAND := 'CMD', COMMAND_DETAILS := 'LED_OFF', ERROR => MessageERROR));
+		END_IF
+//
+END_CASE
+
+// === Message Receiving ===
 IF (client.NewMessageAvailable(clearFlag := TRUE)) THEN
 	//Update history
 	IF (currentHistoryIndex >= GVL_Constants.MAX_HISTORY_SIZE) THEN
@@ -140,6 +170,9 @@ IF (client.NewMessageAvailable(clearFlag := TRUE)) THEN
 		//Can still append
 		currentHistoryIndex := currentHistoryIndex + 1;
 	END_IF
+	
+	//Handle message
+	MessageBase.HANDLE(messageFromServer);
 	
 	//Add new entry
 	currentMessageLogData.message := messageFromServer;	
@@ -153,31 +186,19 @@ heartbeatTimer(IN := isHeartbeatEnabled, PT := heartbeatInterval);
 
 IF (heartbeatTimer.Q AND client.IsClientEnabled) THEN
 	heartbeatTimer(IN := FALSE);
-	
-	client.Send(messageToSend := AddCounterToMessage(sendCounter, message.AliveDemo));
-	ADSLOGSTR(msgCtrlMask := ADSLOG_MSGTYPE_ERROR, msgFmtStr := AddCounterToMessage(sendCounter, message.AliveDemo), '');	//TODO: REMOVE
-	sendCounter := (sendCounter MOD 9999) + 1;
+	//TODO: Actual values
+	client.Send(messageToSend := MessageBase.CREATE('ALIVEJOG', '40.0 50.0 40.0 30.0 30.0 0.0 0.0 0.0 0.0', ERROR => MessageERROR));
 END_IF
 // === ===
 
 client(totalMessagesReceived => totalMessagesFromServerCount);]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="832" Count="21" />
-      <LineId Id="917" Count="0" />
-      <LineId Id="929" Count="4" />
-      <LineId Id="928" Count="0" />
-      <LineId Id="854" Count="11" />
-      <LineId Id="871" Count="1" />
-      <LineId Id="945" Count="3" />
-      <LineId Id="944" Count="0" />
-      <LineId Id="873" Count="5" />
-      <LineId Id="935" Count="0" />
-      <LineId Id="934" Count="0" />
-      <LineId Id="936" Count="0" />
-      <LineId Id="943" Count="0" />
-      <LineId Id="937" Count="0" />
-      <LineId Id="884" Count="30" />
+      <LineId Id="1090" Count="53" />
+      <LineId Id="1204" Count="0" />
+      <LineId Id="1144" Count="54" />
+      <LineId Id="1203" Count="0" />
+      <LineId Id="1199" Count="3" />
       <LineId Id="729" Count="0" />
     </LineIds>
   </POU>

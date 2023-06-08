@@ -133,7 +133,7 @@ CASE MessageBase.COMMUNICATION_MODE OF
 			client.Send(messageToSend := MessageBase.CREATE(COMMAND := 'VAR', COMMAND_DETAILS := 'Joint 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0', ERROR => MessageERROR));
 		END_IF
 
-		IF (debugSendTrigger.Q) THEN // debug: not in use jet.
+		IF (debugSendTrigger.Q) THEN // debug: not in use yet.
 			client.Send(messageToSend := MessageBase.CREATE(COMMAND := '', COMMAND_DETAILS := '', ERROR => MessageERROR));
 		END_IF
 
