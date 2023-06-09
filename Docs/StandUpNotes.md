@@ -55,3 +55,109 @@ Dimitar: Try to figure out CANopen communication.<br>
 Luuk: Try to find out how the ADS protocol works.<br>
 Rik: Try to find out how the ADS protocol works.<br>
 Jorn: Create a conveyor belt in untiy.<br>
+
+## 21.04.2023
+As group: <br>
+Dimitar: <br>
+Luuk: <br>
+Rik: <br>
+Jorn: <br>
+Forgot to report progress.
+
+## 27.04.2023
+King's day, no progress made.
+
+## 28.04.2023
+As group: <br>
+Dimitar: <br>
+Luuk: <br>
+Rik: <br>
+Jorn: <br>
+Forgot to report progress.
+
+## 4.05.2023
+Spring break, no progress made.
+
+## 5.05.2023
+Spring break, no progress made.
+
+## 11.05.2023
+As group: <br>
+Dimitar: <br>
+Luuk: <br>
+Rik: <br>
+Jorn: <br>
+Forgot to report progress.
+
+## 12.05.2023
+As group: <br>
+Dimitar: <br>
+Luuk: <br>
+Rik: <br>
+Jorn: <br>
+Forgot to report progress.
+
+## 18.05.2023
+Assention day, no progress made.
+
+## 19.05.2023
+Free from school, no progress made.
+
+## 25.05.2023
+As group: <br>
+Dimitar: <br>
+Luuk: <br>
+Rik: <br>
+Jorn: <br>
+Forgot to report progress.
+
+## 26.05.2023
+As group: <br>
+Dimitar: <br>
+Luuk: <br>
+Rik: <br>
+Jorn: <br>
+Forgot to report progress.
+
+## 01.06.2023
+As group: -<br>
+Dimitar: Integrating message handling with tcp client.<br>
+Luuk: Integrating message handling with tcp client.<br>
+Rik: Implementing ADS into Unity.<br>
+Jorn: Implementing ADS into Unity.<br>
+
+## 02.06.2023
+As group: -<br>
+Dimitar: Integrating message handling with tcp client.<br>
+Luuk: Integrating message handling with tcp client.<br>
+Rik: Implementing ADS into Unity.<br>
+Jorn: Implementing ADS into Unity.<br>
+
+## 01.06.2023
+As group: -<br>
+Dimitar: Integrating message handling with tcp client.<br>
+Luuk: Integrating message handling with tcp client.<br>
+Rik: Implementing ADS into Unity.<br>
+Jorn: Implementing ADS into Unity.<br>
+
+## 02.06.2023
+As group: Sprint review.<br>
+Dimitar: Integrating message handling with tcp client.<br>
+Luuk: Integrating message handling with tcp client, creating the sprint review from sprint 3.<br>
+Rik: Further implementing ADS.<br>
+Jorn: Further implementing ADS, creating the planning for sprint 4.<br>
+
+## 08.06.2023
+As group: -<br>
+Dimitar: trying to make the robot move, and integrating message handling with tcp client.<br>
+Luuk: trying to make the robot move, and integrating message handling with tcp client.<br>
+Rik: Problem solving ADS so visualisation moves smooth.<br>
+Jorn: Problem solving ADS so visualisation moves smooth. Create a detection zone on conveyor belt that detects if a cube is in range for robot arm, and then stop the conveyor belt.<br>
+
+## 09.06.2023
+As group: -<br>
+Dimitar: Going to try to get the robot move to a certain position using reverse cinematics, adding functionality to message builder.<br>
+Luuk: Going to try to get the robot move to a certain position using reverse cinematics, adding functionality to message builder.<br>
+Rik: .<br>
+Jorn: Create a detection zone on conveyor belt that detects if a cube is in range for robot arm, and then stop the conveyor belt.<br>
+
