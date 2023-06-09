@@ -58,7 +58,7 @@ VAR
 	//finalSendMsg : STRING(100);
 	
 	heartbeatTimer : TON;
-	heartbeatInterval : TIME := T#1S;
+	heartbeatInterval : TIME := T#100MS;
 	
 	sendCounter : INT := 1;
 	finalAliveMessage : STRING(100) := '';
@@ -71,7 +71,8 @@ VAR
 	currentMessageLogData : MessageLogData;
 	
 	//Testing
-	dummyHeartbeatValues : STRING(80) := '40.0 50.0 40.0 30.0 30.0 0.0 0.0 0.0 0.0';
+	dummyHeartbeatValues : STRING(80);
+	dummyMoveValues : STRING(80);
 	
 
 END_VAR
@@ -133,11 +134,11 @@ CASE MessageBase.COMMUNICATION_MODE OF
 // ROBOT COM
 		IF (sendTrigger.Q) THEN  // debug: send move command to robot.
 			//TODO: Rework to use +- buttons (like in the C# application)
-			client.Send(messageToSend := MessageBase.CREATE(COMMAND := 'VAR', COMMAND_DETAILS := 'Joint 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0', ERROR => MessageERROR));
+			client.Send(messageToSend := MessageBase.CREATE(COMMAND := 'VAR', COMMAND_DETAILS := 'GetPosVariable Joint', ERROR => MessageERROR));
 		END_IF
 
 		IF (debugSendTrigger.Q) THEN // debug: not in use yet.
-			client.Send(messageToSend := MessageBase.CREATE(COMMAND := '', COMMAND_DETAILS := '', ERROR => MessageERROR));
+			client.Send(messageToSend := MessageBase.CREATE(COMMAND := 'CMD', COMMAND_DETAILS := 'Reset', ERROR => MessageERROR));
 		END_IF
 
 		IF (connectToRobotTrigger.Q) THEN
@@ -192,8 +193,8 @@ heartbeatTimer(IN := isHeartbeatEnabled, PT := heartbeatInterval);
 
 IF (heartbeatTimer.Q AND client.IsClientEnabled) THEN
 	heartbeatTimer(IN := FALSE);
-	//TODO: Actual values
-	dummyHeartbeatValues := '40.0 50.0 40.0 30.0 30.0 0.0 0.0 0.0 0.0';
+	//TODO: Way to build an ALIVEJOG message out of separate values, aka providing each number into a variable
+	dummyHeartbeatValues := '-10.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0';
 	client.Send(messageToSend := MessageBase.CREATE('ALIVEJOG', dummyHeartbeatValues, ERROR => MessageERROR));
 END_IF
 // === ===
@@ -201,16 +202,7 @@ END_IF
 client(totalMessagesReceived => totalMessagesFromServerCount);]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="1090" Count="22" />
-      <LineId Id="1284" Count="0" />
-      <LineId Id="1113" Count="30" />
-      <LineId Id="1204" Count="0" />
-      <LineId Id="1144" Count="14" />
-      <LineId Id="1359" Count="3" />
-      <LineId Id="1159" Count="39" />
-      <LineId Id="1203" Count="0" />
-      <LineId Id="1280" Count="0" />
-      <LineId Id="1199" Count="3" />
+      <LineId Id="1444" Count="120" />
       <LineId Id="729" Count="0" />
     </LineIds>
   </POU>

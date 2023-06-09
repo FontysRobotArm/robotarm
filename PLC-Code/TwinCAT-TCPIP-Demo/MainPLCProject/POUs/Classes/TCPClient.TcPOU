@@ -43,6 +43,7 @@ VAR
 	m_sendStatus : SendStatus;
 	m_sendErrorId : UDINT;
 	m_sendTimeout : TIME := T#15S;	//Note: Lower?
+	//m_sendTimeout : TIME := T#1M;	//Note: Lower?
 	
 	//Receiving
 	m_receiveDataExchangeState : DataExchangeState := DataExchangeState.IDLE;	
@@ -71,7 +72,7 @@ ClientServerConnection(sSrvNetID := m_serverNetID,
 						 nMode := 0,
 						 sRemoteHost := RemoteServerAddress,
 						 nRemotePort := m_remoteServerPort,
-						 tReconnect := CLIENT_RECONNECT_TIME,
+						 tReconnect := CLIENT_RECONNECT_TIME,	//MAYBE
 						 bEnable := IsClientEnabled,
 						 bBusy => m_isBusy,
 						 bError => m_errorOccured,
@@ -125,6 +126,7 @@ CASE m_currentState OF
 			
 			IF (m_receiveStatus = ReceiveStatus.FAIL) THEN
 				//Fail Handling
+				//How does it get to error and the error is 0??
 				LogToWarning(msgFmtStr := 'Receive fail error: %s', messageArg := UDINT_TO_STRING(m_receiveErrorId));
 			END_IF
 			
@@ -239,7 +241,7 @@ END_IF]]></ST>
     <Method Name="Receive" Id="{ecff7511-048a-4262-805e-93cdb66af916}">
       <Declaration><![CDATA[METHOD PRIVATE Receive : ReceiveStatus
 VAR_INPUT
-	timeout : TIME := T#10S;
+	timeout : TIME;// := T#10S;
 	readInterval : TIME := T#10MS;
 	messageDelimiter : BYTE := 0;
 END_VAR
@@ -351,6 +353,8 @@ CASE m_receiveDataExchangeState OF
 				ELSE	
 					//No more space in the receive object
 					Receive := ReceiveStatus.FAIL;
+					errorId := 42;
+					//LogToWarning('totalBytesReceived exceeded limit: Received: %s', UDINT_TO_STRING(receivedBytes));
 					m_receiveDataExchangeState := DataExchangeState.ERROR;
 				END_IF //IF (totalBytesReceived < SIZEOF(receivedMessage))
 			ELSE
@@ -362,6 +366,7 @@ CASE m_receiveDataExchangeState OF
 				IF (m_receiveTimeoutTimer.Q) THEN
 					Receive := ReceiveStatus.TIMEOUT;
 					m_receiveDataExchangeState := DataExchangeState.ERROR;
+					LogToWarning('Timed out!', '');
 				ELSE
 					//Read again
 					m_receiveDataExchangeState := DataExchangeState.START;
@@ -506,6 +511,7 @@ END_CASE
       <LineId Id="438" Count="3" />
       <LineId Id="594" Count="0" />
       <LineId Id="442" Count="4" />
+      <LineId Id="658" Count="0" />
       <LineId Id="534" Count="0" />
       <LineId Id="448" Count="3" />
       <LineId Id="535" Count="0" />
@@ -562,10 +568,14 @@ END_CASE
       <LineId Id="1518" Count="2" />
       <LineId Id="1522" Count="7" />
       <LineId Id="1686" Count="0" />
-      <LineId Id="1530" Count="6" />
+      <LineId Id="1530" Count="2" />
+      <LineId Id="1715" Count="1" />
+      <LineId Id="1533" Count="3" />
       <LineId Id="1538" Count="3" />
       <LineId Id="1567" Count="0" />
-      <LineId Id="1542" Count="21" />
+      <LineId Id="1542" Count="1" />
+      <LineId Id="1713" Count="0" />
+      <LineId Id="1544" Count="19" />
       <LineId Id="38" Count="0" />
     </LineIds>
     <LineIds Name="TCPClient.ReceivedData.Get">
