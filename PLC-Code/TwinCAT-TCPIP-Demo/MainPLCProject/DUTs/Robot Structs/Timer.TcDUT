@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="Timer" Id="{27d2dc1f-45fc-4ce0-8295-bfc49af49711}">
+    <Declaration><![CDATA[TYPE Timer :
+STRUCT
+	timerTime : TIME;
+	timerStart : BOOL;
+	timerCon : TON;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

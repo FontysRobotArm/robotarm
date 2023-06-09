@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <GlobalTextList Name="GlobalTextList" Id="{b1d42324-5ee4-4556-86ca-476d586bb572}">
+  <GlobalTextList Name="GlobalTextList" Id="{0a4ab465-eebd-4093-833a-e4d4826c510b}">
     <XmlArchive>
       <Data>
         <o xml:space="preserve" t="GlobalTextListObject">
@@ -41,6 +41,36 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"576"</v>
+              <v n="TextDefault">"Joint : "</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"308"</v>
+              <v n="TextDefault">"Joint0 : "</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"296"</v>
+              <v n="TextDefault">"Joint1 : "</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"504"</v>
+              <v n="TextDefault">"Joint2 : "</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"56"</v>
+              <v n="TextDefault">"Joint3 : "</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"770"</v>
+              <v n="TextDefault">"Left"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"290"</v>
               <v n="TextDefault">"Message"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -61,6 +91,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"93"</v>
+              <v n="TextDefault">"Right"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"729"</v>
               <v n="TextDefault">"Send"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -76,15 +111,25 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"75"</v>
+              <v n="TextDefault">"Stop"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"256"</v>
               <v n="TextDefault">"Time"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
+            <o>
+              <v n="TextID">"297"</v>
+              <v n="TextDefault">"To Idle Position"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
           </l>
           <l n="Languages" t="ArrayList" />
-          <v n="GuidInit">{8ce42188-d848-4195-a88f-1307b0938701}</v>
-          <v n="GuidReInit">{41bf72b6-fc11-480f-807f-47dcaa51fa5a}</v>
-          <v n="GuidExitX">{b6ad7a28-e679-4c4c-8c11-ae8d8d9d8294}</v>
+          <v n="GuidInit">{d0cd784e-c26c-424b-b79d-8df6ab624406}</v>
+          <v n="GuidReInit">{dfacb059-ae88-407e-bc05-1709649dc607}</v>
+          <v n="GuidExitX">{9ef19bc2-ab9d-4d6c-a68f-4929a8f92839}</v>
         </o>
       </Data>
       <TypeList>

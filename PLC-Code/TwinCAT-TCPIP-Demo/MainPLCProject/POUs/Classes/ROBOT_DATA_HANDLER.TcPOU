@@ -1,0 +1,315 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="ROBOT_DATA_HANDLER" Id="{e0987821-00dd-4921-8e97-ded148e1ea82}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK ROBOT_DATA_HANDLER
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="DATA_TO_STRING" Id="{fccde642-b27d-4984-8d27-e867d0497562}">
+      <Declaration><![CDATA[METHOD PUBLIC DATA_TO_STRING : STRING
+VAR_INPUT
+END_VAR
+VAR
+	emptyJointsString : STRING := '0.0 0.0 0.0 0.0 0.0';
+	separator : STRING := ' ';
+	
+	debugValue : LREAL := 10.0;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// CONVERT MOVEMENT DATA TO ROBOT MOVEMENT STRING.
+
+//GVL.robotData.joint0.speed := 0.0; // DEBUG REMOVE LATER
+//GVL.robotData.joint1.speed := 0.0; // DEBUG REMOVE LATER
+//GVL.robotData.joint2.speed := 0.0; // DEBUG REMOVE LATER
+//GVL.robotData.joint3.speed := 0.0; // DEBUG REMOVE LATER
+
+DATA_TO_STRING :=
+	CONCAT(LREAL_TO_STRING(GVL.robotData.joint0.curSpeed), 
+	CONCAT(separator, 
+	CONCAT(LREAL_TO_STRING(GVL.robotData.joint1.curSpeed),
+	CONCAT(separator, 
+	CONCAT(LREAL_TO_STRING(GVL.robotData.joint2.curSpeed),
+	CONCAT(separator,  
+	CONCAT(LREAL_TO_STRING(GVL.robotData.joint3.curSpeed),
+	CONCAT(separator,
+		emptyJointsString))))))));]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DEGREES_TO_MOVEMENT_DATA" Id="{0af9d1a1-3d38-4078-9a1c-ac12d9d574c7}">
+      <Declaration><![CDATA[METHOD PUBLIC DEGREES_TO_MOVEMENT_DATA : BOOL
+VAR_INPUT
+	degrees : LREAL;
+	jointNr : INT;
+END_VAR
+VAR
+	moveTime : TIME;
+	moveSpeed : LREAL;
+	tempTimeValue : LREAL;
+	speedMultiplier : LREAL := 3;
+	TimePerDegree : LREAL := 544;
+	TimePerDegree3 : LREAL := 390;
+	tempDegrees : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE jointNr OF
+	0:
+		tempDegrees := degrees - GVL.robotData.joint0.curPosition;
+	1:
+		tempDegrees := degrees - GVL.robotData.joint1.curPosition;
+	2:
+		tempDegrees := degrees - GVL.robotData.joint2.curPosition;
+	3:
+		tempDegrees := degrees - GVL.robotData.joint3.curPosition;
+END_CASE
+
+IF (tempDegrees < 0) THEN
+	moveSpeed := 20.0;
+	tempDegrees := tempDegrees * -1;
+ELSIF (tempDegrees > 0) THEN
+	moveSpeed := -20.0;
+	tempDegrees := tempDegrees;
+END_IF
+
+
+moveSpeed := moveSpeed * speedMultiplier;
+IF (jointNr = 3) THEN
+	tempTimeValue := ((tempDegrees * TimePerDegree3) / speedMultiplier);
+ELSE
+	tempTimeValue := ((tempDegrees * TimePerDegree) / speedMultiplier);
+END_IF
+moveTime := LREAL_TO_TIME(tempTimeValue);
+
+
+CASE jointNr OF
+	0:
+		GVL.robotData.joint0.timer.timerTime := moveTime;
+		GVL.robotData.joint0.setSpeed := moveSpeed;
+		GVL.robotData.joint0.curPosition := degrees;
+	1:
+		GVL.robotData.joint1.timer.timerTime := moveTime;
+		GVL.robotData.joint1.setSpeed := moveSpeed;
+		GVL.robotData.joint1.curPosition := degrees;
+	2:
+		GVL.robotData.joint2.timer.timerTime := moveTime;
+		GVL.robotData.joint2.setSpeed := moveSpeed;
+		GVL.robotData.joint2.curPosition := degrees;
+	3:
+		GVL.robotData.joint3.timer.timerTime := moveTime;
+		GVL.robotData.joint3.setSpeed := moveSpeed;
+		GVL.robotData.joint3.curPosition := degrees;
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="JOINT_DATA_HANDLER" Id="{950a9264-99be-412c-ae5a-e97f094a88ef}">
+      <Declaration><![CDATA[METHOD PUBLIC JOINT_DATA_HANDLER : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// TURN RECEIVED ROBOT DATA INTO CURRENT JOINTS POSITIONS
+// DONT USE THIS METHOD!!!!!!!!!!
+
+IF (GVL.ReceivedStringArray[0] = 'CRISTART') THEN
+	// WHAT IS THE LOCATION
+END_IF
+
+
+// WE CAN'T GET THE CURRENT LOCATION FROM THE ROBOT SO WE LEFT THIS EMPTY FOR NOW!!]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MOVEMENT_CONTROLLER" Id="{6693a925-8cf1-4973-8966-fef29abe4757}">
+      <Declaration><![CDATA[METHOD PUBLIC MOVEMENT_CONTROLLER : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	count : INT := 0;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR count := 0 TO 3 BY 1 DO
+	CASE count OF
+		0:
+			IF (GVL.robotData.joint0.setSpeed <> 0 AND GVL.robotData.isBusy[4] = FALSE) THEN
+				GVL.robotData.joint0.timer.timerStart := TRUE;
+				GVL.robotData.joint0.curSpeed := GVL.robotData.joint0.setSpeed;
+				GVL.robotData.joint0.setSpeed := 0;
+				GVL.robotData.isBusy[0] := TRUE;
+			ELSIF(GVL.robotData.joint0.timer.timerCon.Q) THEN
+				GVL.robotData.joint0.timer.timerStart := FALSE;
+				GVL.robotData.joint0.curSpeed := 0.0;
+				GVL.robotData.isBusy[0] := FALSE;
+			END_IF
+		1:
+			IF (GVL.robotData.joint1.setSpeed <> 0 AND GVL.robotData.isBusy[4] = FALSE) THEN
+				GVL.robotData.joint1.timer.timerStart := TRUE;
+				GVL.robotData.joint1.curSpeed := GVL.robotData.joint1.setSpeed;
+				GVL.robotData.joint1.setSpeed := 0;
+				GVL.robotData.isBusy[1] := TRUE;
+			ELSIF(GVL.robotData.joint1.timer.timerCon.Q) THEN
+				GVL.robotData.joint1.timer.timerStart := FALSE;
+				GVL.robotData.joint1.curSpeed := 0.0;
+				GVL.robotData.isBusy[1] := FALSE;
+			END_IF
+		2:
+			IF (GVL.robotData.joint2.setSpeed <> 0 AND GVL.robotData.isBusy[4] = FALSE) THEN
+				GVL.robotData.joint2.timer.timerStart := TRUE;
+				GVL.robotData.joint2.curSpeed := GVL.robotData.joint2.setSpeed;
+				GVL.robotData.joint2.setSpeed := 0;
+				GVL.robotData.isBusy[2] := TRUE;
+			ELSIF(GVL.robotData.joint2.timer.timerCon.Q) THEN
+				GVL.robotData.joint2.timer.timerStart := FALSE;
+				GVL.robotData.joint2.curSpeed := 0.0;
+				GVL.robotData.isBusy[2] := FALSE;
+			END_IF
+		3:
+			IF (GVL.robotData.joint3.setSpeed <> 0 AND GVL.robotData.isBusy[4] = FALSE) THEN
+				GVL.robotData.joint3.timer.timerStart := TRUE;
+				GVL.robotData.joint3.curSpeed := GVL.robotData.joint3.setSpeed;
+				GVL.robotData.joint3.setSpeed := 0;
+				GVL.robotData.isBusy[3] := TRUE;
+			ELSIF(GVL.robotData.joint3.timer.timerCon.Q) THEN
+				GVL.robotData.joint3.timer.timerStart := FALSE;
+				GVL.robotData.joint3.curSpeed := 0.0;
+				GVL.robotData.isBusy[3] := FALSE;
+			END_IF
+	END_CASE
+END_FOR
+
+IF (GVL.robotData.isBusy[0] = FALSE AND GVL.robotData.isBusy[1] = FALSE AND GVL.robotData.isBusy[2] = FALSE AND GVL.robotData.isBusy[3] = FALSE) THEN
+	GVL.robotData.isBusy[4] := FALSE;
+ELSE
+	GVL.robotData.isBusy[4] := TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TARGET_TO_DEGREES_CALCULATOR" Id="{75f14b1b-a7a8-462d-a304-4bcbb1ec7ecf}">
+      <Declaration><![CDATA[METHOD PUBLIC TARGET_TO_DEGREES_CALCULATOR : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// TURN CURRENT POSITION AND TARGET POSITION TO INTO MOVEMENT PER JOINT.
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="ROBOT_DATA_HANDLER">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="ROBOT_DATA_HANDLER.DATA_TO_STRING">
+      <LineId Id="5" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="25" Count="2" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="12" Count="0" />
+    </LineIds>
+    <LineIds Name="ROBOT_DATA_HANDLER.DEGREES_TO_MOVEMENT_DATA">
+      <LineId Id="82" Count="1" />
+      <LineId Id="86" Count="1" />
+      <LineId Id="90" Count="1" />
+      <LineId Id="94" Count="1" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="18" Count="2" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="99" Count="1" />
+      <LineId Id="102" Count="1" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="34" Count="1" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="56" Count="1" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="58" Count="1" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="60" Count="1" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="30" Count="0" />
+    </LineIds>
+    <LineIds Name="ROBOT_DATA_HANDLER.JOINT_DATA_HANDLER">
+      <LineId Id="5" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="14" Count="1" />
+      <LineId Id="12" Count="0" />
+    </LineIds>
+    <LineIds Name="ROBOT_DATA_HANDLER.MOVEMENT_CONTROLLER">
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="16" Count="1" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="20" Count="2" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="25" Count="3" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="32" Count="3" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="36" Count="1" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="39" Count="3" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="43" Count="1" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="57" Count="4" />
+      <LineId Id="56" Count="0" />
+    </LineIds>
+    <LineIds Name="ROBOT_DATA_HANDLER.TARGET_TO_DEGREES_CALCULATOR">
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -27,6 +27,15 @@ VAR
 	buttonDebugSendPressed : BOOL;
 	buttonEnableMotorsPressed : BOOL;
 	buttonDisableMotorsPressed : BOOL;
+	buttonLeft0Pressed : BOOL;
+	buttonRight0Pressed : BOOL;
+	buttonLeft1Pressed : BOOL;
+	buttonRight1Pressed : BOOL;
+	buttonLeft2Pressed : BOOL;
+	buttonRight2Pressed : BOOL;
+	buttonLeft3Pressed : BOOL;
+	buttonRight3Pressed : BOOL;
+	buttonStopPressed : BOOL;
 	
 	connectTrigger : R_TRIG;
 	disconnectTrigger : R_TRIG;
@@ -35,6 +44,15 @@ VAR
 	debugSendTrigger : R_TRIG;
 	enableMotorsTrigger : R_TRIG;
 	disableMotorsTrigger : R_TRIG;
+	stopTrigger : R_TRIG;
+	right0Trigger : R_TRIG;
+	left0Trigger : R_TRIG;
+	right1Trigger : R_TRIG;
+	left1Trigger : R_TRIG;
+	right2Trigger : R_TRIG;
+	left2Trigger : R_TRIG;
+	right3Trigger : R_TRIG;
+	left3Trigger : R_TRIG;
 	
 	client : TCPClient(ROBOT_IP, ROBOT_PORT, isEnabled := FALSE);
 	LocalSystemTime : FB_LocalSystemTime;
@@ -43,6 +61,9 @@ VAR
 	MessageBase : COMMUNICATION(CommunicationMODE := COM_MODE.Robot);
 	messageHandler : MESSAGE_HANDLER();
 	MessageERROR : int := 0;
+	//
+	// ROBOT_DATA handling
+	RobotDataHandler : ROBOT_DATA_HANDLER;
 	//
 	
 	connectionMessage : STRING(20) := 'Disconnected';
@@ -102,6 +123,15 @@ connectToRobotTrigger(CLK := buttonConnectToRobotPressed);
 debugSendTrigger(CLK := buttonDebugSendPressed);
 enableMotorsTrigger(CLK := buttonEnableMotorsPressed);
 disableMotorsTrigger(CLK := buttonDisableMotorsPressed);
+left0Trigger(CLK := buttonLeft0Pressed);
+right0Trigger(CLK := buttonRight0Pressed);
+left1Trigger(CLK := buttonLeft1Pressed);
+right1Trigger(CLK := buttonRight1Pressed);
+left2Trigger(CLK := buttonLeft2Pressed);
+right2Trigger(CLK := buttonRight2Pressed);
+left3Trigger(CLK := buttonLeft3Pressed);
+right3Trigger(CLK := buttonRight3Pressed);
+stopTrigger(CLK := buttonStopPressed);
 
 IF (client.IsConnected) THEN
 	connectionMessage := 'Connected';
@@ -134,11 +164,62 @@ CASE MessageBase.COMMUNICATION_MODE OF
 // ROBOT COM
 		IF (sendTrigger.Q) THEN  // debug: send move command to robot.
 			//TODO: Rework to use +- buttons (like in the C# application)
-			client.Send(messageToSend := MessageBase.CREATE(COMMAND := 'VAR', COMMAND_DETAILS := 'GetPosVariable Joint', ERROR => MessageERROR));
+//			client.Send(messageToSend := MessageBase.CREATE(COMMAND := 'VAR', COMMAND_DETAILS := 'GetPosVariable Joint', ERROR => MessageERROR));
+			RobotDataHandler.DEGREES_TO_MOVEMENT_DATA(degrees := -45, jointNr := 0);
+			RobotDataHandler.DEGREES_TO_MOVEMENT_DATA(degrees := -34.8529, jointNr := 1);
+			RobotDataHandler.DEGREES_TO_MOVEMENT_DATA(degrees := -18.5157, jointNr := 2);
+			RobotDataHandler.DEGREES_TO_MOVEMENT_DATA(degrees := 53.3685, jointNr := 3);
 		END_IF
 
 		IF (debugSendTrigger.Q) THEN // debug: not in use yet.
-			client.Send(messageToSend := MessageBase.CREATE(COMMAND := 'CMD', COMMAND_DETAILS := 'Reset', ERROR => MessageERROR));
+//			client.Send(messageToSend := MessageBase.CREATE(COMMAND := 'CMD', COMMAND_DETAILS := 'Reset', ERROR => MessageERROR));
+			RobotDataHandler.DEGREES_TO_MOVEMENT_DATA(degrees := 0, jointNr := 0);
+			RobotDataHandler.DEGREES_TO_MOVEMENT_DATA(degrees := 0, jointNr := 1);
+			RobotDataHandler.DEGREES_TO_MOVEMENT_DATA(degrees := 0, jointNr := 2);
+			RobotDataHandler.DEGREES_TO_MOVEMENT_DATA(degrees := 0, jointNr := 3);
+		END_IF
+		
+		IF (left0Trigger.Q) THEN  // debug: send move command to robot.
+			GVL.robotData.joint0.curSpeed := 20.0;
+		END_IF
+		
+		IF (right0Trigger.Q) THEN 
+			
+			GVL.robotData.joint0.curSpeed := -20.0;
+		END_IF
+		
+		IF (left1Trigger.Q) THEN  // debug: send move command to robot.
+			GVL.robotData.joint1.curSpeed := 20.0;
+		END_IF
+		
+		IF (right1Trigger.Q) THEN 
+			
+			GVL.robotData.joint1.curSpeed := -20.0;
+		END_IF
+		
+		IF (left2Trigger.Q) THEN  // debug: send move command to robot.
+			GVL.robotData.joint2.curSpeed := 20.0;
+		END_IF
+		
+		IF (right2Trigger.Q) THEN 
+			
+			GVL.robotData.joint2.curSpeed := -20.0;
+		END_IF
+		
+		IF (left3Trigger.Q) THEN  // debug: send move command to robot.
+			GVL.robotData.joint3.curSpeed := 20.0;
+		END_IF
+		
+		IF (right3Trigger.Q) THEN 
+			
+			GVL.robotData.joint3.curSpeed := -20.0;
+		END_IF
+		
+		IF (stopTrigger.Q) THEN 
+			GVL.robotData.joint0.curSpeed := 0.0;
+			GVL.robotData.joint1.curSpeed := 0.0;
+			GVL.robotData.joint2.curSpeed := 0.0;
+			GVL.robotData.joint3.curSpeed := 0.0;
 		END_IF
 
 		IF (connectToRobotTrigger.Q) THEN
@@ -193,16 +274,71 @@ heartbeatTimer(IN := isHeartbeatEnabled, PT := heartbeatInterval);
 
 IF (heartbeatTimer.Q AND client.IsClientEnabled) THEN
 	heartbeatTimer(IN := FALSE);
-	//TODO: Way to build an ALIVEJOG message out of separate values, aka providing each number into a variable
-	dummyHeartbeatValues := '-10.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0';
-	client.Send(messageToSend := MessageBase.CREATE('ALIVEJOG', dummyHeartbeatValues, ERROR => MessageERROR));
+	// Send all movement data to the robot via the hardbeat.
+	client.Send(messageToSend := MessageBase.CREATE('ALIVEJOG', RobotDataHandler.DATA_TO_STRING(), ERROR => MessageERROR));
 END_IF
-// === ===
+
+// === ROBOT MOVEMENT ===
+GVL.robotData.joint0.timer.timerCon(IN := GVL.robotData.joint0.timer.timerStart, PT := GVL.robotData.joint0.timer.timerTime);
+GVL.robotData.joint1.timer.timerCon(IN := GVL.robotData.joint1.timer.timerStart, PT := GVL.robotData.joint1.timer.timerTime);
+GVL.robotData.joint2.timer.timerCon(IN := GVL.robotData.joint2.timer.timerStart, PT := GVL.robotData.joint2.timer.timerTime);
+GVL.robotData.joint3.timer.timerCon(IN := GVL.robotData.joint3.timer.timerStart, PT := GVL.robotData.joint3.timer.timerTime);
+
+RobotDataHandler.MOVEMENT_CONTROLLER();
+
 
 client(totalMessagesReceived => totalMessagesFromServerCount);]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="1444" Count="120" />
+      <LineId Id="1444" Count="23" />
+      <LineId Id="1655" Count="1" />
+      <LineId Id="1705" Count="0" />
+      <LineId Id="1704" Count="0" />
+      <LineId Id="1707" Count="0" />
+      <LineId Id="1706" Count="0" />
+      <LineId Id="1709" Count="0" />
+      <LineId Id="1708" Count="0" />
+      <LineId Id="1657" Count="0" />
+      <LineId Id="1468" Count="32" />
+      <LineId Id="1685" Count="0" />
+      <LineId Id="1688" Count="2" />
+      <LineId Id="1646" Count="0" />
+      <LineId Id="1502" Count="3" />
+      <LineId Id="1648" Count="0" />
+      <LineId Id="1686" Count="1" />
+      <LineId Id="1647" Count="0" />
+      <LineId Id="1658" Count="0" />
+      <LineId Id="1660" Count="0" />
+      <LineId Id="1663" Count="0" />
+      <LineId Id="1659" Count="0" />
+      <LineId Id="1664" Count="0" />
+      <LineId Id="1666" Count="0" />
+      <LineId Id="1691" Count="0" />
+      <LineId Id="1669" Count="0" />
+      <LineId Id="1665" Count="0" />
+      <LineId Id="1710" Count="0" />
+      <LineId Id="1712" Count="6" />
+      <LineId Id="1711" Count="0" />
+      <LineId Id="1719" Count="0" />
+      <LineId Id="1721" Count="6" />
+      <LineId Id="1720" Count="0" />
+      <LineId Id="1728" Count="0" />
+      <LineId Id="1730" Count="6" />
+      <LineId Id="1729" Count="0" />
+      <LineId Id="1670" Count="0" />
+      <LineId Id="1672" Count="1" />
+      <LineId Id="1675" Count="1" />
+      <LineId Id="1674" Count="0" />
+      <LineId Id="1671" Count="0" />
+      <LineId Id="1506" Count="52" />
+      <LineId Id="1645" Count="0" />
+      <LineId Id="1561" Count="1" />
+      <LineId Id="1678" Count="0" />
+      <LineId Id="1563" Count="0" />
+      <LineId Id="1677" Count="0" />
+      <LineId Id="1681" Count="3" />
+      <LineId Id="1679" Count="1" />
+      <LineId Id="1564" Count="0" />
       <LineId Id="729" Count="0" />
     </LineIds>
   </POU>

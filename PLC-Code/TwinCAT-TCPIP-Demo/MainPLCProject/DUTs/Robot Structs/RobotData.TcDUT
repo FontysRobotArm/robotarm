@@ -4,10 +4,10 @@
     <Declaration><![CDATA[TYPE RobotData :
 STRUCT
 	//Variables will be manipulated by Unity via ADS
-	targetX : INT;
-	targetY : INT;
-	targetZ : INT;	
-	velocity : INT;	//Global value for all joints
+	targetX : LREAL;
+	targetY : LREAL;
+	targetZ : LREAL;	
+	isBusy : ARRAY[0..4] OF BOOL;	//Global value for all joints
 	
 	joint0 : Joint;
 	joint1 : Joint;

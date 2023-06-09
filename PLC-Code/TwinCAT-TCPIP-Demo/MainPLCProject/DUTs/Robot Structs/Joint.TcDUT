@@ -3,7 +3,10 @@
   <DUT Name="Joint" Id="{ba4bf0d8-7ccb-42b6-ac15-60a638e315a7}">
     <Declaration><![CDATA[TYPE Joint :
 STRUCT
-	position : INT;
+	curPosition : LREAL;
+	curSpeed : LREAL;
+	setSpeed : LREAL;
+	timer : TIMER;
 END_STRUCT
 END_TYPE
 ]]></Declaration>
