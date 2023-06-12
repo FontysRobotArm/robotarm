@@ -273,7 +273,7 @@
                     </o>
                     <o>
                       <v n="Id">2422045748L</v>
-                      <v n="Value">135</v>
+                      <v n="Value">179</v>
                     </o>
                     <o>
                       <v n="Id">2134141914L</v>
@@ -346,7 +346,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">"Send"</v>
+                      <v n="Value">"Send / Send Command"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -354,7 +354,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"729"</v>
+                      <v n="Value">"247"</v>
                     </o>
                   </l>
                 </o>
@@ -1796,11 +1796,11 @@
                     </o>
                     <o>
                       <v n="Id">357335551L</v>
-                      <v n="Value">105</v>
+                      <v n="Value">104</v>
                     </o>
                     <o>
                       <v n="Id">2422045748L</v>
-                      <v n="Value">136</v>
+                      <v n="Value">182</v>
                     </o>
                     <o>
                       <v n="Id">2134141914L</v>
@@ -1849,11 +1849,11 @@
                     </o>
                     <o>
                       <v n="Id">550940142L</v>
-                      <v n="Value">334</v>
+                      <v n="Value">357</v>
                     </o>
                     <o>
                       <v n="Id">1473355128L</v>
-                      <v n="Value">129</v>
+                      <v n="Value">128</v>
                     </o>
                     <o>
                       <v n="Id">493260384L</v>
@@ -1873,7 +1873,7 @@
                     </o>
                     <o>
                       <v n="Id">390574330L</v>
-                      <v n="Value">"To Idle Position"</v>
+                      <v n="Value">"To Idle Position / Send Var"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -1881,7 +1881,7 @@
                     </o>
                     <o>
                       <v n="Id">823443203L</v>
-                      <v n="Value">"297"</v>
+                      <v n="Value">"485"</v>
                     </o>
                   </l>
                 </o>

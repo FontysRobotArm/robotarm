@@ -58,7 +58,7 @@ VAR
 	LocalSystemTime : FB_LocalSystemTime;
 	
 	// COMMUNICATION message handling
-	MessageBase : COMMUNICATION(CommunicationMODE := COM_MODE.Robot);
+	MessageBase : COMMUNICATION(CommunicationMODE := COM_MODE.Monarco); // change this to switch between robot and monarco mode!!
 	messageHandler : MESSAGE_HANDLER();
 	MessageERROR : int := 0;
 	//
