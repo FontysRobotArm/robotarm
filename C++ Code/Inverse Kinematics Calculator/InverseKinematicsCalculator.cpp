@@ -50,7 +50,7 @@ double GetAngleDegreesFromOppositeAndAdjacent(double opposite, double adjacent)
 {
     double tangentFraction = opposite / adjacent;
     double targetAngleRadians = atan(tangentFraction);  //No need to worry about which quadrant we are in, as we are working with a right-angle triangle so we can only be in the first one
-    double targetAngleDegrees = targetAngleRadians * 180 / PI;
+    double targetAngleDegrees = RadiansToDegrees(targetAngleRadians);
 
     return targetAngleDegrees;
 }
@@ -135,9 +135,6 @@ double GetAngleDegreesFrom3Sides(double adjacentLeft, double opposite, double ad
     return targetAngleDegrees;
 }
 
-/// @brief Gets the absolute degrees for Arm 1 and Arm 2. Negtive values indicate rotation TOWARDS the base, positive values indicate rotation AWAY from the base
-/// @param position The target position
-/// @return [0] = arm1 degrees (absolute), [1] = arm2 degrees (absolute) 
 std::tuple<double, double> GetArm1AndArm2Degrees(Position position)
 {
     //TODO: Double check actualY, robot does not go low enough
@@ -150,8 +147,8 @@ std::tuple<double, double> GetArm1AndArm2Degrees(Position position)
         return {0.0, 0.0};
     }
 
-    double oppositeSide = GetDistanceToPositionFromBase2D(position);
-    double adjacentSide = actualY;
+    double oppositeSide = actualY;
+    double adjacentSide = GetDistanceToPositionFromBase2D(position);
 
     double angleDegreesFromBaseToActualY = GetAngleDegreesFromOppositeAndAdjacent(oppositeSide, adjacentSide);
 
@@ -163,8 +160,7 @@ std::tuple<double, double> GetArm1AndArm2Degrees(Position position)
 
     double arm1AngleDegreesRelativeToBaseTriangle = GetAngleDegreesFrom3Sides(armTriangleA, armTriangleB, armTriangleBase);
 
-    //Negative angle towards the base, positive angle away from the base (hence why +90 and -(sum of angles))
-    double arm1AbsoluteDegrees = 90.0 - (angleDegreesFromBaseToActualY + arm1AngleDegreesRelativeToBaseTriangle);   //Shouldn't be less than 0
+    double arm1AbsoluteDegrees = (angleDegreesFromBaseToActualY + arm1AngleDegreesRelativeToBaseTriangle) - 90.0;   //Shouldn't be less than 0
 
     //Arm 2 calculations
     double arm2DegreesRelativeArm1 = GetAngleDegreesFrom3Sides(armTriangleB, armTriangleBase, armTriangleA);
@@ -188,7 +184,6 @@ int main(int argc, char** argv)
     double arm3Degrees = GetArm3RotationPerpendicularToGround(arm1Degrees, arm2Degrees);
 
     std::cout << "Base: " << GetBaseAngleDegrees(targetPosition) << '\370' << std::endl;
-    // std::cout << "Distance from base (2D): " << GetDistanceToPositionFromBase2D(targetPosition) << std::endl;
     std::cout << "Arm 1: " << arm1Degrees << '\370' << std::endl;
     std::cout << "Arm 2: " << arm2Degrees << '\370' << std::endl;
     std::cout << "Arm 3: " << arm3Degrees << '\370' << std::endl;
