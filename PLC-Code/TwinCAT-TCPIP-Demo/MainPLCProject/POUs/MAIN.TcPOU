@@ -18,6 +18,8 @@ VAR CONSTANT
 	command : Command := ();
 	message : Message := ();
 
+	testPosition : Position := (x := 250.0, z := 250.0, y := 250.0);
+	
 END_VAR
 VAR
 	buttonConnectPressed : BOOL;
@@ -64,6 +66,7 @@ VAR
 	//
 	// ROBOT_DATA handling
 	RobotDataHandler : ROBOT_DATA_HANDLER;
+	armMovementHandler : ArmMovementHandler;
 	//
 	
 	connectionMessage : STRING(20) := 'Disconnected';
@@ -101,7 +104,10 @@ END_VAR
     <Implementation>
       <ST><![CDATA[//On PLC reset/program download, close all connections
 IF (closeAll) THEN	
+	//Curretly used as a setup as well
+	//TODO: Add actual setup
 	closeAll := FALSE;
+	armMovementHandler.BindRobotDataHandler(dataHandler := RobotDataHandler);
 	closeAllConnections(sSrvNetId := '', bExecute := TRUE, tTimeout := T#10S);
 ELSE
 	closeAllConnections(bExecute := FALSE);
@@ -169,10 +175,11 @@ CASE MessageBase.COMMUNICATION_MODE OF
 //			RobotDataHandler.DEGREES_TO_MOVEMENT_DATA(degrees := -34.8529, jointNr := 1);
 //			RobotDataHandler.DEGREES_TO_MOVEMENT_DATA(degrees := -18.5157, jointNr := 2);
 //			RobotDataHandler.DEGREES_TO_MOVEMENT_DATA(degrees := 53.3685, jointNr := 3);
+			//RobotDataHandler.SET_JOINTS_TO_POSITION(X := 250.0, Z:= 250.0, Y := 250.0, baseOffsetDegrees := 0.0);
 			
-			GVL.robotData.targetX := 250.0;
-			GVL.robotData.targetZ := 0.0;
-			GVL.robotData.targetY := 200.0;
+			GVL.robotData.targetX := 253.0;
+			GVL.robotData.targetZ := 171.0;
+			GVL.robotData.targetY := 160.0;
 			
 			GVL.robotData.hasNewData := TRUE;
 		END_IF
@@ -253,7 +260,7 @@ CASE MessageBase.COMMUNICATION_MODE OF
 //
 END_CASE
 
-// === Message Receiving ===
+// === Message Handling ===
 IF (client.NewMessageAvailable(clearFlag := TRUE)) THEN
 	//Update history
 	IF (currentHistoryIndex >= GVL_Constants.MAX_HISTORY_SIZE) THEN
@@ -275,7 +282,6 @@ IF (client.NewMessageAvailable(clearFlag := TRUE)) THEN
 END_IF
 // === ===
 
-RobotDataHandler();
 
 // === Heartbeat ===
 heartbeatTimer(IN := isHeartbeatEnabled, PT := heartbeatInterval);
@@ -286,19 +292,16 @@ IF (heartbeatTimer.Q AND client.IsClientEnabled) THEN
 	client.Send(messageToSend := MessageBase.CREATE('ALIVEJOG', RobotDataHandler.DATA_TO_STRING(), ERROR => MessageERROR));
 END_IF
 
-// === ROBOT MOVEMENT ===
-GVL.robotData.joint0.timer.timerCon(IN := GVL.robotData.joint0.timer.timerStart, PT := GVL.robotData.joint0.timer.timerTime);
-GVL.robotData.joint1.timer.timerCon(IN := GVL.robotData.joint1.timer.timerStart, PT := GVL.robotData.joint1.timer.timerTime);
-GVL.robotData.joint2.timer.timerCon(IN := GVL.robotData.joint2.timer.timerStart, PT := GVL.robotData.joint2.timer.timerTime);
-GVL.robotData.joint3.timer.timerCon(IN := GVL.robotData.joint3.timer.timerStart, PT := GVL.robotData.joint3.timer.timerTime);
-
-RobotDataHandler.MOVEMENT_CONTROLLER();
-
+armMovementHandler();
 
 client(totalMessagesReceived => totalMessagesFromServerCount);]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="1444" Count="23" />
+      <LineId Id="1444" Count="2" />
+      <LineId Id="1849" Count="0" />
+      <LineId Id="1848" Count="0" />
+      <LineId Id="1847" Count="0" />
+      <LineId Id="1447" Count="20" />
       <LineId Id="1655" Count="1" />
       <LineId Id="1705" Count="0" />
       <LineId Id="1704" Count="0" />
@@ -310,6 +313,7 @@ client(totalMessagesReceived => totalMessagesFromServerCount);]]></ST>
       <LineId Id="1468" Count="32" />
       <LineId Id="1685" Count="0" />
       <LineId Id="1688" Count="2" />
+      <LineId Id="1947" Count="0" />
       <LineId Id="1835" Count="0" />
       <LineId Id="1837" Count="0" />
       <LineId Id="1839" Count="2" />
@@ -344,15 +348,11 @@ client(totalMessagesReceived => totalMessagesFromServerCount);]]></ST>
       <LineId Id="1671" Count="0" />
       <LineId Id="1506" Count="46" />
       <LineId Id="1834" Count="0" />
-      <LineId Id="1833" Count="0" />
       <LineId Id="1553" Count="5" />
       <LineId Id="1645" Count="0" />
       <LineId Id="1561" Count="1" />
-      <LineId Id="1678" Count="0" />
-      <LineId Id="1563" Count="0" />
-      <LineId Id="1677" Count="0" />
-      <LineId Id="1681" Count="3" />
-      <LineId Id="1679" Count="1" />
+      <LineId Id="1842" Count="0" />
+      <LineId Id="1679" Count="0" />
       <LineId Id="1564" Count="0" />
       <LineId Id="729" Count="0" />
     </LineIds>

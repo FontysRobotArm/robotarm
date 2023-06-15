@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ArmMovementState" Id="{e3727e3c-51b5-4289-a89b-38cc1bdf6972}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE ArmMovementState :
+(
+	NONE,
+	IDLE,
+	PICKING,
+	DROPPING
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,241 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="ArmMovementHandler" Id="{a201750d-bc8e-4f73-9aad-c861e805bead}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK ArmMovementHandler
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	m_robotDataHandler : REFERENCE TO ROBOT_DATA_HANDLER;
+	m_prevMovementState : ArmMovementState := ArmMovementState.NONE;
+	m_currentMovementState : ArmMovementState := ArmMovementState.IDLE;
+	
+	m_objectInteractionTimer : TON;	//Timer to stay at the pickup/dropoff point
+	m_isInteractionTimerOn : BOOL := FALSE;
+	m_objectInteractionTime : TIME := T#5S;
+	
+	m_currentTargetPosition : Position;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//Always run
+//Timers
+GVL.robotData.joint0.timer.timerCon(IN := GVL.robotData.joint0.timer.timerStart, PT := GVL.robotData.joint0.timer.timerTime);
+GVL.robotData.joint1.timer.timerCon(IN := GVL.robotData.joint1.timer.timerStart, PT := GVL.robotData.joint1.timer.timerTime);
+GVL.robotData.joint2.timer.timerCon(IN := GVL.robotData.joint2.timer.timerStart, PT := GVL.robotData.joint2.timer.timerTime);
+GVL.robotData.joint3.timer.timerCon(IN := GVL.robotData.joint3.timer.timerStart, PT := GVL.robotData.joint3.timer.timerTime);
+
+m_robotDataHandler.MOVEMENT_CONTROLLER();
+
+m_objectInteractionTimer(IN := m_isInteractionTimerOn, PT := m_objectInteractionTime);
+
+CASE m_currentMovementState OF
+	ArmMovementState.IDLE:
+		IF (m_prevMovementState <> m_currentMovementState) THEN
+			//Set target to default
+			m_robotDataHandler.TO_ZERO();
+			m_robotDataHandler.MOVEMENT_CONTROLLER();
+		END_IF
+		
+		m_prevMovementState := m_currentMovementState;
+		m_currentMovementState := HandleIdleState();
+		
+		IF (m_prevMovementState <> m_currentMovementState) THEN
+			//on exit code
+		END_IF
+	
+	//
+	ArmMovementState.PICKING:
+		IF (m_prevMovementState <> m_currentMovementState) THEN
+			//on-entry code
+			//Target position acquired by remote
+			m_robotDataHandler.SET_JOINTS_TO_POSITION(X := GVL.robotData.targetX, 
+													  Z := GVL.robotData.targetZ,
+													  Y := GVL.robotData.targetY,
+													  baseOffsetDegrees := 0);
+			m_robotDataHandler.MOVEMENT_CONTROLLER();
+			GVL.robotData.isAtDefaultPosition := FALSE;
+		END_IF
+		m_prevMovementState := m_currentMovementState;
+		m_currentMovementState := HandlePickingState();
+		
+		IF (m_prevMovementState <> m_currentMovementState) THEN
+			//on exit code
+			GVL.robotData.hasNewData := FALSE;
+		END_IF
+	//
+	ArmMovementState.DROPPING:
+		IF (m_prevMovementState <> m_currentMovementState) THEN
+			//on-entry code
+			m_robotDataHandler.SET_JOINTS_TO_POSITION(X := GVL_RobotArmConstants.DROPOFF_X, 
+													  Z := GVL_RobotArmConstants.DROPOFF_Z,
+													  Y := GVL.robotData.targetY,
+													  baseOffsetDegrees := GVL_RobotArmConstants.DROPOFF_BASE_OFFSET);
+			GVL.robotData.isAtDefaultPosition := FALSE;
+			m_robotDataHandler.MOVEMENT_CONTROLLER();
+		END_IF
+		m_prevMovementState := m_currentMovementState;
+		m_currentMovementState := HandleDroppingState();
+		
+		IF (m_prevMovementState <> m_currentMovementState) THEN
+			//on exit code
+		END_IF
+	//
+END_CASE]]></ST>
+    </Implementation>
+    <Method Name="BindRobotDataHandler" Id="{4d972ee1-fd9c-4972-bff9-867d7815a807}">
+      <Declaration><![CDATA[METHOD PUBLIC BindRobotDataHandler : BOOL
+VAR_INPUT
+	dataHandler : REFERENCE TO ROBOT_DATA_HANDLER;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[m_robotDataHandler REF= dataHandler;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="HandleDroppingState" Id="{c9662fa4-7a58-4138-9332-03c49adb764f}">
+      <Declaration><![CDATA[METHOD PRIVATE HandleDroppingState : ArmMovementState
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[HandleDroppingState := ArmMovementState.DROPPING;
+
+IF (GVL.robotData.isBusy[4]) THEN
+	RETURN;
+END_IF
+
+//Dropoff reached
+m_isInteractionTimerOn := TRUE;
+
+IF (m_objectInteractionTimer.Q) THEN
+	//We have waited enough
+	m_objectInteractionTimer(IN := FALSE);
+	m_isInteractionTimerOn := FALSE;
+	HandleDroppingState := ArmMovementState.IDLE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="HandleIdleState" Id="{927f3a78-087b-4706-856b-7f50f86aa58b}">
+      <Declaration><![CDATA[METHOD PRIVATE HandleIdleState : ArmMovementState
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[HandleIdleState := ArmMovementState.IDLE;
+
+IF (GVL.robotData.isBusy[4]) THEN
+	RETURN;
+END_IF
+
+//Not busy anymore
+GVL.robotData.isAtDefaultPosition := TRUE;
+
+IF (GVL.robotData.hasNewData) THEN
+	HandleIdleState := ArmMovementState.PICKING;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="HandlePickingState" Id="{a6eeed43-8606-4729-bab5-a02c4076c2e9}">
+      <Declaration><![CDATA[METHOD PRIVATE HandlePickingState : ArmMovementState
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[HandlePickingState := ArmMovementState.PICKING;
+
+// 
+IF (GVL.robotData.isBusy[4]) THEN
+	RETURN;
+END_IF
+
+//We are at the picking destination
+m_isInteractionTimerOn := TRUE;
+
+IF (m_objectInteractionTimer.Q) THEN
+	//We have waited enough
+	m_objectInteractionTimer(IN := FALSE);
+	m_isInteractionTimerOn := FALSE;
+	HandlePickingState := ArmMovementState.DROPPING;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="ArmMovementHandler">
+      <LineId Id="84" Count="6" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="26" Count="5" />
+      <LineId Id="14" Count="2" />
+      <LineId Id="32" Count="1" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="74" Count="2" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="34" Count="5" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="17" Count="2" />
+      <LineId Id="40" Count="1" />
+      <LineId Id="99" Count="2" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="42" Count="5" />
+      <LineId Id="20" Count="1" />
+      <LineId Id="13" Count="0" />
+    </LineIds>
+    <LineIds Name="ArmMovementHandler.BindRobotDataHandler">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ArmMovementHandler.HandleDroppingState">
+      <LineId Id="19" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="5" Count="2" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="12" Count="3" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="16" Count="1" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="ArmMovementHandler.HandleIdleState">
+      <LineId Id="11" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="20" Count="2" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="ArmMovementHandler.HandlePickingState">
+      <LineId Id="18" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="10" Count="2" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

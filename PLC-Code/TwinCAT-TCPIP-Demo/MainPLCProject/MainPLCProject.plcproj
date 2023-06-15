@@ -100,6 +100,9 @@
     <Folder Include="VISUs" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DUTs\ArmMovementState.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\ClientState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -151,6 +154,9 @@
       <LinkAlways>true</LinkAlways>
     </Compile>
     <Compile Include="PlcTask.TcTTO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Classes\ArmMovementHandler.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Classes\ClientDataExchanger.TcPOU">
