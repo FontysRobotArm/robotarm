@@ -3,14 +3,56 @@
   <POU Name="ROBOT_DATA_HANDLER" Id="{e0987821-00dd-4921-8e97-ded148e1ea82}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK ROBOT_DATA_HANDLER
 VAR_INPUT
+	baseOffsetDegrees : LREAL := 0;	//Positive numbers = right, negative numbers left
 END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
+	baseRotation : LREAL;
+	actualBaseRotation : LREAL;
+	arm1Rotation : LREAL;
+	arm2Rotation : LREAL;
+	arm3Rotation : LREAL;
+	targetPosition : Position;
+	
+	i : INT;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[IF (NOT GVL.robotData.hasNewData) THEN
+	RETURN;
+END_IF
+
+//New data available
+targetPosition.x := GVL.robotData.targetX;
+targetPosition.z := GVL.robotData.targetZ;
+targetPosition.y := GVL.robotData.targetY;
+
+TARGET_TO_DEGREES_CALCULATOR(targetPosition, baseDegrees => baseRotation, 
+										     arm1Degrees => arm1Rotation,
+											 arm2Degrees => arm2Rotation,
+											 arm3Degrees => arm3Rotation);
+
+//Set all joints to calcualted angles
+actualBaseRotation := baseRotation + baseOffsetDegrees;
+
+IF (actualBaseRotation > GVL_RobotArmConstants.MAXIMUM_BASE_ROTATION_FROM_CENTER) THEN
+	//Cap right
+	actualBaseRotation := GVL_RobotArmConstants.MAXIMUM_BASE_ROTATION_FROM_CENTER;
+ELSIF (actualBaseRotation < (-1.0 * GVL_RobotArmConstants.MAXIMUM_BASE_ROTATION_FROM_CENTER)) THEN
+	//Cap left
+	actualBaseRotation := -1.0 * GVL_RobotArmConstants.MAXIMUM_BASE_ROTATION_FROM_CENTER;
+END_IF
+
+DEGREES_TO_MOVEMENT_DATA(jointNr := 0, degrees := actualBaseRotation);
+DEGREES_TO_MOVEMENT_DATA(jointNr := 1, degrees := arm1Rotation);						 
+DEGREES_TO_MOVEMENT_DATA(jointNr := 2, degrees := arm2Rotation);
+DEGREES_TO_MOVEMENT_DATA(jointNr := 3, degrees := arm3Rotation);
+
+GVL.robotData.hasNewData := FALSE;						 
+						 
+ 
+]]></ST>
     </Implementation>
     <Method Name="DATA_TO_STRING" Id="{fccde642-b27d-4984-8d27-e867d0497562}">
       <Declaration><![CDATA[METHOD PUBLIC DATA_TO_STRING : STRING
@@ -211,6 +253,36 @@ arm3Degrees := GetArm3RotationPerpendicularToGround(arm1Degrees, arm2Degrees);]]
     </Method>
     <LineIds Name="ROBOT_DATA_HANDLER">
       <LineId Id="9" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="33" Count="2" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="37" Count="0" />
     </LineIds>
     <LineIds Name="ROBOT_DATA_HANDLER.DATA_TO_STRING">
       <LineId Id="5" Count="0" />

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="GetXSide" Id="{e81490c4-9833-4755-8734-64c7883bf73b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION GetXSide : LREAL
+VAR_INPUT
+	xPos : LREAL;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[GetXSide := GVL_RobotArmConstants.DISTANCE_TO_PICKUP_AREA + xPos;]]></ST>
+    </Implementation>
+    <LineIds Name="GetXSide">
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

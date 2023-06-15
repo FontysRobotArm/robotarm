@@ -146,6 +146,10 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="GVLs\GVL_RobotArmConstants.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
@@ -203,10 +207,10 @@
     <Compile Include="POUs\InverseKinematics\GetZSide.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\InverseKinematics\MAIN.TcPOU">
+    <Compile Include="POUs\InverseKinematics\RadiansToDegrees.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\InverseKinematics\RadiansToDegrees.TcPOU">
+    <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Visualization Manager.TcVMO">

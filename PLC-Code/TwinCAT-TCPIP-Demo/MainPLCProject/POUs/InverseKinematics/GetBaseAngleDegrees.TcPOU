@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="GetBaseAngleDegrees" Id="{441fedc9-3722-4f45-93e9-4f08e4146b23}" SpecialFunc="None">
+    <Declaration><![CDATA[/// Gets the angle to which the base has to rotate. 
+/// Negative value to rotate left, positive value to rotate right
+FUNCTION GetBaseAngleDegrees : LREAL
+VAR_INPUT
+	position : Position;	//The target position
+END_VAR
+VAR
+	xSide : LREAL;
+	halfAreaWidth : LREAL;
+	zSide : LREAL;
+	angleOffset : LREAL := 1.0;
+	targetAngleDegrees : LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[xSide := GVL_RobotArmConstants.DISTANCE_TO_PICKUP_AREA + position.x;
+halfAreaWidth := GVL_RobotArmConstants.PICKUP_AREA_WIDTH / 2;
+
+IF (position.z < halfAreaWidth) THEN
+	zSide := halfAreaWidth - position.z;
+	angleOffset := -1.0;
+ELSE
+	zSide := position.z - halfAreaWidth;
+	angleOffset := 1.0;
+END_IF
+
+targetAngleDegrees := GetAngleDegreesFromOppositeAndAdjacent(opposite := zSide, adjacent := xSide);
+GetBaseAngleDegrees := targetAngleDegrees * angleOffset;]]></ST>
+    </Implementation>
+    <LineIds Name="GetBaseAngleDegrees">
+      <LineId Id="7" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="20" Count="3" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="25" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

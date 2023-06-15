@@ -9,6 +9,9 @@ STRUCT
 	targetZ : LREAL;	
 	isBusy : ARRAY[0..4] OF BOOL;	//Global value for all joints
 	
+	hasNewData : BOOL := FALSE;
+	isAtDefaultPosition : BOOL;	//TODO: Implement in PLC
+	
 	joint0 : Joint;
 	joint1 : Joint;
 	joint2 : Joint;

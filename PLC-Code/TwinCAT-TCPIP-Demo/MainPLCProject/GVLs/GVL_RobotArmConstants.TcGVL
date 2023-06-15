@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="GVL_RobotArmConstants" Id="{ef61bbec-f38a-46b1-ba77-40b840afe4d2}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL CONSTANT
+	//All robot values are in mm
+	PICKUP_AREA_DEPTH : LREAL := 50.0 * 10;
+	PICKUP_AREA_WIDTH : LREAL := 50.0 * 10;
+	
+	//Values in mm
+	DISTANCE_TO_PICKUP_AREA : LREAL := 0.0;	//Real: 90mm
+	ARM_BASE_HEIGHT : LREAL := 310;
+	GRABBER_HEIGHT : LREAL := 0.0;
+	ARM_1_LENGTH : LREAL := 340.0;
+	ARM_2_LENGTH : LREAL := 265.0;
+	ARM_3_LENGTH : LREAL := 170.0;
+	Pi : LREAL := 3.141592653589793238463;
+	
+	//Values in degrees
+	MAXIMUM_BASE_ROTATION_FROM_CENTER : LREAL := 120.0;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

@@ -178,7 +178,7 @@ double GetArm3RotationPerpendicularToGround(double arm1AbsoluteRotationDegrees, 
 int main(int argc, char** argv)
 {
     //TODO: Check position validity in functions/before passing them around
-    Position targetPosition = Position(25 CM, 0 CM, 20 CM);
+    Position targetPosition = Position(25 CM, 25 CM, 20 CM);
     
     auto [arm1Degrees, arm2Degrees] = GetArm1AndArm2Degrees(targetPosition);
     double arm3Degrees = GetArm3RotationPerpendicularToGround(arm1Degrees, arm2Degrees);

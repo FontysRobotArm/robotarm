@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="GetArm3RotationPerpendicularToGround" Id="{79deac1a-d420-49be-93ba-617f9889f39b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION GetArm3RotationPerpendicularToGround : LREAL
+VAR_INPUT
+	arm1RotationDegrees : LREAL;
+	arm2RotationDegrees : LREAL;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[GetArm3RotationPerpendicularToGround := -1.0 * (arm1RotationDegrees + arm2RotationDegrees);]]></ST>
+    </Implementation>
+    <LineIds Name="GetArm3RotationPerpendicularToGround">
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
