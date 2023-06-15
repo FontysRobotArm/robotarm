@@ -96,6 +96,7 @@
     <Folder Include="POUs" />
     <Folder Include="POUs\Classes" />
     <Folder Include="POUs\Helpers" />
+    <Folder Include="POUs\InverseKinematics" />
     <Folder Include="VISUs" />
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +122,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\Robot Structs\Joint.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\Robot Structs\Position.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\Robot Structs\RobotData.TcDUT">
@@ -172,7 +176,37 @@
     <Compile Include="POUs\Helpers\ShiftHistoryLeft.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\MAIN.TcPOU">
+    <Compile Include="POUs\InverseKinematics\GetAngleDegreesFrom3Sides.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\InverseKinematics\GetAngleDegreesFromOppositeAndAdjacent.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\InverseKinematics\GetArm1AndArm2Degrees.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\InverseKinematics\GetArm3RotationPerpendicularToGround.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\InverseKinematics\GetBaseAngleDegrees.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\InverseKinematics\GetDistanceToPositionFromBase2D.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\InverseKinematics\GetHypotenuse.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\InverseKinematics\GetXSide.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\InverseKinematics\GetZSide.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\InverseKinematics\MAIN.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\InverseKinematics\RadiansToDegrees.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Visualization Manager.TcVMO">

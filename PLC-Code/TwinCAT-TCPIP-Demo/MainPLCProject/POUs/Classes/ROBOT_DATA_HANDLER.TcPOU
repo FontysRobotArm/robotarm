@@ -194,12 +194,19 @@ END_IF]]></ST>
     <Method Name="TARGET_TO_DEGREES_CALCULATOR" Id="{75f14b1b-a7a8-462d-a304-4bcbb1ec7ecf}">
       <Declaration><![CDATA[METHOD PUBLIC TARGET_TO_DEGREES_CALCULATOR : BOOL
 VAR_INPUT
+	targetPosition : Position;
 END_VAR
-]]></Declaration>
+VAR_OUTPUT
+	baseDegrees : LREAL;
+	arm1Degrees : LREAL;
+	arm2Degrees : LREAL;
+	arm3Degrees : LREAL;
+END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// TURN CURRENT POSITION AND TARGET POSITION TO INTO MOVEMENT PER JOINT.
-
-]]></ST>
+baseDegrees := GetBaseAngleDegrees(targetPosition);
+GetArm1AndArm2Degrees(position := targetPosition, arm1Degrees => arm1Degrees, arm2Degrees => arm2Degrees);
+arm3Degrees := GetArm3RotationPerpendicularToGround(arm1Degrees, arm2Degrees);]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="ROBOT_DATA_HANDLER">
@@ -307,9 +314,8 @@ END_VAR
       <LineId Id="56" Count="0" />
     </LineIds>
     <LineIds Name="ROBOT_DATA_HANDLER.TARGET_TO_DEGREES_CALCULATOR">
-      <LineId Id="5" Count="0" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="6" Count="0" />
+      <LineId Id="5" Count="1" />
+      <LineId Id="17" Count="1" />
     </LineIds>
   </POU>
 </TcPlcObject>
