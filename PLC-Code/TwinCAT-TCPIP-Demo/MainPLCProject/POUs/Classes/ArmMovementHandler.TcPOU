@@ -35,7 +35,7 @@ CASE m_currentMovementState OF
 		IF (m_prevMovementState <> m_currentMovementState) THEN
 			//Set target to default
 			m_robotDataHandler.TO_ZERO();
-			m_robotDataHandler.MOVEMENT_CONTROLLER();
+			m_robotDataHandler.MOVEMENT_CONTROLLER();	//Put into all on-entry code to ensure the isBusy variables are properly updated
 		END_IF
 		
 		m_prevMovementState := m_currentMovementState;
@@ -111,7 +111,6 @@ m_isInteractionTimerOn := TRUE;
 
 IF (m_objectInteractionTimer.Q) THEN
 	//We have waited enough
-	m_objectInteractionTimer(IN := FALSE);
 	m_isInteractionTimerOn := FALSE;
 	HandleDroppingState := ArmMovementState.IDLE;
 END_IF]]></ST>
@@ -156,7 +155,6 @@ m_isInteractionTimerOn := TRUE;
 
 IF (m_objectInteractionTimer.Q) THEN
 	//We have waited enough
-	m_objectInteractionTimer(IN := FALSE);
 	m_isInteractionTimerOn := FALSE;
 	HandlePickingState := ArmMovementState.DROPPING;
 END_IF]]></ST>
@@ -204,9 +202,7 @@ END_IF]]></ST>
       <LineId Id="5" Count="2" />
       <LineId Id="9" Count="0" />
       <LineId Id="8" Count="0" />
-      <LineId Id="12" Count="3" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="16" Count="1" />
+      <LineId Id="12" Count="5" />
       <LineId Id="10" Count="0" />
     </LineIds>
     <LineIds Name="ArmMovementHandler.HandleIdleState">
@@ -232,7 +228,6 @@ END_IF]]></ST>
       <LineId Id="14" Count="0" />
       <LineId Id="13" Count="0" />
       <LineId Id="15" Count="0" />
-      <LineId Id="24" Count="0" />
       <LineId Id="20" Count="0" />
       <LineId Id="17" Count="0" />
       <LineId Id="16" Count="0" />
