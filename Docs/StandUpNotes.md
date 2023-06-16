@@ -158,6 +158,19 @@ Jorn: Problem solving ADS so visualisation moves smooth. Create a detection zone
 As group: -<br>
 Dimitar: Going to try to get the robot move to a certain position using reverse cinematics, adding functionality to message builder.<br>
 Luuk: Going to try to get the robot move to a certain position using reverse cinematics, adding functionality to message builder.<br>
-Rik: .<br>
+Rik: Create a detection zone on conveyor belt that detects if a cube is in range for robot arm, and then stop the conveyor belt.<br>
 Jorn: Create a detection zone on conveyor belt that detects if a cube is in range for robot arm, and then stop the conveyor belt.<br>
 
+## 15.06.2023
+As group: -<br>
+Dimitar: Integrating inverse kinematics, and making the robot state machine for pick and place object.<br>
+Luuk: Integrating inverse kinematics, and making the robot state machine for pick and place object.<br>
+Rik: Fixing documentation, bug fixing with integrating unity with robotarm.<br>
+Jorn: Start to work on project final report, bug fixing with integrating unity with robotarm.<br>
+
+## 16.06.2023
+As group: full integration, and documentation<br>
+Dimitar: -<br>
+Luuk: -<br>
+Rik: -<br>
+Jorn: -<br>
