@@ -56,11 +56,11 @@ VAR
 	right3Trigger : R_TRIG;
 	left3Trigger : R_TRIG;
 	
-	client : TCPClient(ROBOT_IP, ROBOT_PORT, isEnabled := FALSE);
+	client : TCPClient(LOCAL_IP, LOCAL_PORT, isEnabled := FALSE);
 	LocalSystemTime : FB_LocalSystemTime;
 	
 	// COMMUNICATION message handling
-	MessageBase : COMMUNICATION(CommunicationMODE := COM_MODE.Robot); // change this to switch between robot and monarco mode!!
+	MessageBase : COMMUNICATION(CommunicationMODE := COM_MODE.Monarco); // change this to switch between robot and monarco mode!!
 	messageHandler : MESSAGE_HANDLER();
 	MessageERROR : int := 0;
 	//
@@ -146,16 +146,17 @@ ELSE
 END_IF
 
 IF (connectTrigger.Q) THEN
-	CASE MessageBase.COMMUNICATION_MODE OF
-	// check for communication mode and set IP for this mode.
-		COM_MODE.Robot:
-			client.RemoteServerAddress := ROBOT_IP;
-			client.RemoteServerPort := ROBOT_PORT;
+	//TODO: UNCOMMENT
+//	CASE MessageBase.COMMUNICATION_MODE OF
+//	// check for communication mode and set IP for this mode.
+//		COM_MODE.Robot:
+//			client.RemoteServerAddress := ROBOT_IP;
+//			client.RemoteServerPort := ROBOT_PORT;
 		
-		COM_MODE.Monarco:
-			client.RemoteServerAddress := MONARCO_IP;
-			client.RemoteServerPort := MONARCO_PORT;
-	END_CASE
+//		COM_MODE.Monarco:
+//			client.RemoteServerAddress := MONARCO_IP;
+//			client.RemoteServerPort := MONARCO_PORT;
+//	END_CASE
 	client.BindReceiveMessage(variableToBind := messageFromServer);
 	client.Enable();
 END_IF
@@ -310,7 +311,9 @@ client(totalMessagesReceived => totalMessagesFromServerCount);]]></ST>
       <LineId Id="1709" Count="0" />
       <LineId Id="1708" Count="0" />
       <LineId Id="1657" Count="0" />
-      <LineId Id="1468" Count="32" />
+      <LineId Id="1468" Count="7" />
+      <LineId Id="2049" Count="0" />
+      <LineId Id="1476" Count="24" />
       <LineId Id="1685" Count="0" />
       <LineId Id="1688" Count="2" />
       <LineId Id="1947" Count="0" />

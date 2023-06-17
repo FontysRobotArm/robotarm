@@ -159,9 +159,6 @@
     <Compile Include="POUs\Classes\ArmMovementHandler.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Classes\ClientDataExchanger.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\Classes\COMMUNICATION.TcPOU">
       <SubType>Code</SubType>
     </Compile>
