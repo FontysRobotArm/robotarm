@@ -22,6 +22,8 @@ VAR CONSTANT
 	
 END_VAR
 VAR
+	isSetUp : BOOL := FALSE;	
+
 	buttonConnectPressed : BOOL;
 	buttonDisconnectPressed : BOOL;	
 	buttonSendPressed : BOOL;
@@ -88,7 +90,6 @@ VAR
 	finalAliveMessage : STRING(100) := '';
 	totalMessagesFromServerCount : UDINT := 0;
 	
-	//TODO: Extract into fb? Separate task?
 	currentTime : TIMESTRUCT;
 	messageHistoryArray : ARRAY [0.. GVL_Constants.MAX_HISTORY_SIZE - 1] OF MessageLogData;
 	currentHistoryIndex : BYTE := 0;
@@ -103,70 +104,78 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[//On PLC reset/program download, close all connections
-IF (closeAll) THEN	
-	//Curretly used as a setup as well
-	//TODO: Add actual setup
-	closeAll := FALSE;
-	armMovementHandler.BindRobotDataHandler(dataHandler := RobotDataHandler);
-	closeAllConnections(sSrvNetId := '', bExecute := TRUE, tTimeout := T#10S);
-ELSE
-	closeAllConnections(bExecute := FALSE);
-END_IF
+HandlePLCReset();
 
-IF (closeAllConnections.bBusy) THEN
-	RETURN;	//Do not continue the program until all connections are closed
-END_IF
-
+HandleSetup();
 // === ===
 
 // === UI Handling ===
-LocalSystemTime(bEnable := TRUE, tTimeout := T#1S, systemTime => currentTime);
-
-connectTrigger(CLK := buttonConnectPressed);
-disconnectTrigger(CLK := buttonDisconnectPressed);
-sendTrigger(CLK := buttonSendPressed);
-connectToRobotTrigger(CLK := buttonConnectToRobotPressed);
-debugSendTrigger(CLK := buttonDebugSendPressed);
-enableMotorsTrigger(CLK := buttonEnableMotorsPressed);
-disableMotorsTrigger(CLK := buttonDisableMotorsPressed);
-left0Trigger(CLK := buttonLeft0Pressed);
-right0Trigger(CLK := buttonRight0Pressed);
-left1Trigger(CLK := buttonLeft1Pressed);
-right1Trigger(CLK := buttonRight1Pressed);
-left2Trigger(CLK := buttonLeft2Pressed);
-right2Trigger(CLK := buttonRight2Pressed);
-left3Trigger(CLK := buttonLeft3Pressed);
-right3Trigger(CLK := buttonRight3Pressed);
-stopTrigger(CLK := buttonStopPressed);
-
-IF (client.IsConnected) THEN
-	connectionMessage := 'Connected';
-ELSE
-	connectionMessage := 'Disconnected';
-END_IF
-
-IF (connectTrigger.Q) THEN
-	//TODO: UNCOMMENT
-//	CASE MessageBase.COMMUNICATION_MODE OF
-//	// check for communication mode and set IP for this mode.
-//		COM_MODE.Robot:
-//			client.RemoteServerAddress := ROBOT_IP;
-//			client.RemoteServerPort := ROBOT_PORT;
-		
-//		COM_MODE.Monarco:
-//			client.RemoteServerAddress := MONARCO_IP;
-//			client.RemoteServerPort := MONARCO_PORT;
-//	END_CASE
-	client.BindReceiveMessage(variableToBind := messageFromServer);
-	client.Enable();
-END_IF
-
-IF (disconnectTrigger.Q) THEN
-	client.Disable();
-END_IF
+HandleUI();
 
 // === Message Sending ===
-CASE MessageBase.COMMUNICATION_MODE OF
+HandleMessageSending();
+
+// === Message Handling ===
+HandleMessageReceiving();
+
+// === Heartbeat ===
+HandleHeartbeat();
+
+// === Arm movement ===
+armMovementHandler();
+
+// === Socket client ====
+client(totalMessagesReceived => totalMessagesFromServerCount);]]></ST>
+    </Implementation>
+    <Method Name="HandleHeartbeat" Id="{10805174-f1a2-4535-adc3-cbcd0f1db6e9}">
+      <Declaration><![CDATA[METHOD PRIVATE HandleHeartbeat : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[heartbeatTimer(IN := isHeartbeatEnabled, PT := heartbeatInterval);
+
+IF (heartbeatTimer.Q AND client.IsClientEnabled) THEN
+	heartbeatTimer(IN := FALSE);
+	// Send all movement data to the robot via the hardbeat.
+	client.Send(messageToSend := MessageBase.CREATE('ALIVEJOG', RobotDataHandler.DATA_TO_STRING(), ERROR => MessageERROR));
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="HandleMessageReceiving" Id="{f5421a12-0234-4480-9f66-1b93aaf34f92}">
+      <Declaration><![CDATA[METHOD PRIVATE HandleMessageReceiving : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (client.NewMessageAvailable(clearFlag := TRUE)) THEN
+	//Update history
+	IF (currentHistoryIndex >= GVL_Constants.MAX_HISTORY_SIZE) THEN
+		//Ran out of history space, discard youngest member
+		currentHistoryIndex := GVL_Constants.MAX_HISTORY_SIZE;
+		ShiftHistoryLeft(arr := messageHistoryArray);
+	ELSE
+		//Can still append
+		currentHistoryIndex := currentHistoryIndex + 1;
+	END_IF
+	
+	//Handle message
+	MessageBase.HANDLE(messageFromServer);
+	
+	//Add new entry
+	currentMessageLogData.message := messageFromServer;	
+	currentMessageLogData.systemTimeString := SYSTEMTIME_TO_STRING(in := currentTime);
+	messageHistoryArray[currentHistoryIndex - 1] := currentMessageLogData;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="HandleMessageSending" Id="{5f2d5255-906e-4995-af55-9c0eed205718}">
+      <Declaration><![CDATA[METHOD PRIVATE HandleMessageSending : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE MessageBase.COMMUNICATION_MODE OF
 	COM_MODE.Robot:
 // ROBOT COM
 		IF (sendTrigger.Q) THEN  // debug: send move command to robot.
@@ -259,105 +268,128 @@ CASE MessageBase.COMMUNICATION_MODE OF
 			client.Send(messageToSend := MessageBase.CREATE(COMMAND := 'CMD', COMMAND_DETAILS := 'LED_OFF', ERROR => MessageERROR));
 		END_IF
 //
-END_CASE
-
-// === Message Handling ===
-IF (client.NewMessageAvailable(clearFlag := TRUE)) THEN
-	//Update history
-	IF (currentHistoryIndex >= GVL_Constants.MAX_HISTORY_SIZE) THEN
-		//Ran out of history space, discard youngest member
-		currentHistoryIndex := GVL_Constants.MAX_HISTORY_SIZE;
-		ShiftHistoryLeft(arr := messageHistoryArray);
-	ELSE
-		//Can still append
-		currentHistoryIndex := currentHistoryIndex + 1;
-	END_IF
-	
-	//Handle message
-	MessageBase.HANDLE(messageFromServer);
-	
-	//Add new entry
-	currentMessageLogData.message := messageFromServer;	
-	currentMessageLogData.systemTimeString := SYSTEMTIME_TO_STRING(in := currentTime);
-	messageHistoryArray[currentHistoryIndex - 1] := currentMessageLogData;
-END_IF
-// === ===
-
-
-// === Heartbeat ===
-heartbeatTimer(IN := isHeartbeatEnabled, PT := heartbeatInterval);
-
-IF (heartbeatTimer.Q AND client.IsClientEnabled) THEN
-	heartbeatTimer(IN := FALSE);
-	// Send all movement data to the robot via the hardbeat.
-	client.Send(messageToSend := MessageBase.CREATE('ALIVEJOG', RobotDataHandler.DATA_TO_STRING(), ERROR => MessageERROR));
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="HandlePLCReset" Id="{03ac3a4b-a381-45ec-a6ed-89428617a221}">
+      <Declaration><![CDATA[METHOD HandlePLCReset : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (closeAll) THEN	
+	closeAll := FALSE;
+	closeAllConnections(sSrvNetId := '', bExecute := TRUE, tTimeout := T#10S);
+ELSE
+	closeAllConnections(bExecute := FALSE);
 END_IF
 
-armMovementHandler();
+IF (closeAllConnections.bBusy) THEN
+	RETURN;	//Do not continue the program until all connections are closed
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="HandleSetup" Id="{5825ab53-e740-435b-ae41-093afc4625b8}">
+      <Declaration><![CDATA[METHOD HandleSetup : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (NOT isSetUp) THEN
+	armMovementHandler.BindRobotDataHandler(dataHandler := RobotDataHandler);
 
-client(totalMessagesReceived => totalMessagesFromServerCount);]]></ST>
-    </Implementation>
+	isSetUp := TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="HandleUI" Id="{3c25c835-6ee6-4efb-bc00-93a3cab4fbbe}">
+      <Declaration><![CDATA[METHOD HandleUI : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[LocalSystemTime(bEnable := TRUE, tTimeout := T#1S, systemTime => currentTime);
+
+connectTrigger(CLK := buttonConnectPressed);
+disconnectTrigger(CLK := buttonDisconnectPressed);
+sendTrigger(CLK := buttonSendPressed);
+connectToRobotTrigger(CLK := buttonConnectToRobotPressed);
+debugSendTrigger(CLK := buttonDebugSendPressed);
+enableMotorsTrigger(CLK := buttonEnableMotorsPressed);
+disableMotorsTrigger(CLK := buttonDisableMotorsPressed);
+left0Trigger(CLK := buttonLeft0Pressed);
+right0Trigger(CLK := buttonRight0Pressed);
+left1Trigger(CLK := buttonLeft1Pressed);
+right1Trigger(CLK := buttonRight1Pressed);
+left2Trigger(CLK := buttonLeft2Pressed);
+right2Trigger(CLK := buttonRight2Pressed);
+left3Trigger(CLK := buttonLeft3Pressed);
+right3Trigger(CLK := buttonRight3Pressed);
+stopTrigger(CLK := buttonStopPressed);
+
+IF (client.IsConnected) THEN
+	connectionMessage := 'Connected';
+ELSE
+	connectionMessage := 'Disconnected';
+END_IF
+
+IF (connectTrigger.Q) THEN
+	CASE MessageBase.COMMUNICATION_MODE OF
+	// check for communication mode and set IP for this mode.
+		COM_MODE.Robot:
+			client.RemoteServerAddress := ROBOT_IP;
+			client.RemoteServerPort := ROBOT_PORT;
+		
+		COM_MODE.Monarco:
+			client.RemoteServerAddress := MONARCO_IP;
+			client.RemoteServerPort := MONARCO_PORT;
+	END_CASE
+	client.BindReceiveMessage(variableToBind := messageFromServer);
+	client.Enable();
+END_IF
+
+IF (disconnectTrigger.Q) THEN
+	client.Disable();
+END_IF]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="MAIN">
-      <LineId Id="1444" Count="2" />
-      <LineId Id="1849" Count="0" />
-      <LineId Id="1848" Count="0" />
-      <LineId Id="1847" Count="0" />
-      <LineId Id="1447" Count="20" />
-      <LineId Id="1655" Count="1" />
-      <LineId Id="1705" Count="0" />
-      <LineId Id="1704" Count="0" />
-      <LineId Id="1707" Count="0" />
-      <LineId Id="1706" Count="0" />
-      <LineId Id="1709" Count="0" />
-      <LineId Id="1708" Count="0" />
-      <LineId Id="1657" Count="0" />
-      <LineId Id="1468" Count="7" />
-      <LineId Id="2049" Count="0" />
-      <LineId Id="1476" Count="24" />
-      <LineId Id="1685" Count="0" />
-      <LineId Id="1688" Count="2" />
-      <LineId Id="1947" Count="0" />
-      <LineId Id="1835" Count="0" />
-      <LineId Id="1837" Count="0" />
-      <LineId Id="1839" Count="2" />
-      <LineId Id="1836" Count="0" />
-      <LineId Id="1646" Count="0" />
-      <LineId Id="1502" Count="3" />
-      <LineId Id="1648" Count="0" />
-      <LineId Id="1686" Count="1" />
-      <LineId Id="1647" Count="0" />
-      <LineId Id="1658" Count="0" />
-      <LineId Id="1660" Count="0" />
-      <LineId Id="1663" Count="0" />
-      <LineId Id="1659" Count="0" />
-      <LineId Id="1664" Count="0" />
-      <LineId Id="1666" Count="0" />
-      <LineId Id="1691" Count="0" />
-      <LineId Id="1669" Count="0" />
-      <LineId Id="1665" Count="0" />
-      <LineId Id="1710" Count="0" />
-      <LineId Id="1712" Count="6" />
-      <LineId Id="1711" Count="0" />
-      <LineId Id="1719" Count="0" />
-      <LineId Id="1721" Count="6" />
-      <LineId Id="1720" Count="0" />
-      <LineId Id="1728" Count="0" />
-      <LineId Id="1730" Count="6" />
-      <LineId Id="1729" Count="0" />
-      <LineId Id="1670" Count="0" />
-      <LineId Id="1672" Count="1" />
-      <LineId Id="1675" Count="1" />
-      <LineId Id="1674" Count="0" />
-      <LineId Id="1671" Count="0" />
-      <LineId Id="1506" Count="46" />
-      <LineId Id="1834" Count="0" />
-      <LineId Id="1553" Count="5" />
-      <LineId Id="1645" Count="0" />
-      <LineId Id="1561" Count="1" />
-      <LineId Id="1842" Count="0" />
-      <LineId Id="1679" Count="0" />
-      <LineId Id="1564" Count="0" />
+      <LineId Id="2397" Count="0" />
+      <LineId Id="2410" Count="0" />
+      <LineId Id="2436" Count="0" />
+      <LineId Id="2411" Count="4" />
+      <LineId Id="2420" Count="13" />
       <LineId Id="729" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.HandleHeartbeat">
+      <LineId Id="6" Count="5" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.HandleMessageReceiving">
+      <LineId Id="6" Count="17" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.HandleMessageSending">
+      <LineId Id="6" Count="92" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.HandlePLCReset">
+      <LineId Id="6" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="11" Count="6" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.HandleSetup">
+      <LineId Id="5" Count="1" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="MAIN.HandleUI">
+      <LineId Id="6" Count="37" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="45" Count="2" />
+      <LineId Id="44" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
