@@ -58,7 +58,7 @@ VAR
 	right3Trigger : R_TRIG;
 	left3Trigger : R_TRIG;
 	
-	client : TCPClient(LOCAL_IP, LOCAL_PORT, isEnabled := FALSE);
+	client : TCPClient(MONARCO_IP, MONARCO_PORT, isEnabled := FALSE);	//Note: make sure the COM_MODE is set properly, as it overwrites these values
 	LocalSystemTime : FB_LocalSystemTime;
 	
 	// COMMUNICATION message handling
@@ -334,16 +334,17 @@ ELSE
 END_IF
 
 IF (connectTrigger.Q) THEN
-	CASE MessageBase.COMMUNICATION_MODE OF
-	// check for communication mode and set IP for this mode.
-		COM_MODE.Robot:
-			client.RemoteServerAddress := ROBOT_IP;
-			client.RemoteServerPort := ROBOT_PORT;
+	//Note: Not sure if this is a good idea, as it is burried in the code and can lead to unexpected behaviour
+//	CASE MessageBase.COMMUNICATION_MODE OF
+//	// check for communication mode and set IP for this mode.
+//		COM_MODE.Robot:
+//			client.RemoteServerAddress := ROBOT_IP;
+//			client.RemoteServerPort := ROBOT_PORT;
 		
-		COM_MODE.Monarco:
-			client.RemoteServerAddress := MONARCO_IP;
-			client.RemoteServerPort := MONARCO_PORT;
-	END_CASE
+//		COM_MODE.Monarco:
+//			client.RemoteServerAddress := MONARCO_IP;
+//			client.RemoteServerPort := MONARCO_PORT;
+//	END_CASE
 	client.BindReceiveMessage(variableToBind := messageFromServer);
 	client.Enable();
 END_IF
@@ -386,7 +387,9 @@ END_IF]]></ST>
       <LineId Id="7" Count="0" />
     </LineIds>
     <LineIds Name="MAIN.HandleUI">
-      <LineId Id="6" Count="37" />
+      <LineId Id="6" Count="25" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="32" Count="11" />
       <LineId Id="5" Count="0" />
       <LineId Id="45" Count="2" />
       <LineId Id="44" Count="0" />
