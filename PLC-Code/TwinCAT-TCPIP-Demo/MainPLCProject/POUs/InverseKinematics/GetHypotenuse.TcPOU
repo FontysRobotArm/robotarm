@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="GetHypotenuse" Id="{7f0d3285-114c-4b54-995b-47a8a1b05dc9}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION GetHypotenuse : LREAL
+VAR_INPUT
+	a : LREAL;
+	b : LREAL;
+END_VAR
+VAR
+	resultSquared : LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[resultSquared := a * a + b * b;
+GetHypotenuse := SQRT(resultSquared);]]></ST>
+    </Implementation>
+    <LineIds Name="GetHypotenuse">
+      <LineId Id="7" Count="0" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

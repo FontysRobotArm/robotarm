@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="GetZSide" Id="{3a2ca123-31f1-4d85-a5da-ba5f4030c5c1}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION GetZSide : LREAL
+VAR_INPUT
+	zPos : LREAL;
+END_VAR
+VAR
+	zSide : LREAL;
+	halfAreaWidth : LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[halfAreaWidth := GVL_RobotArmConstants.PICKUP_AREA_WIDTH / 2;
+
+IF (zPos < halfAreaWidth) THEN
+	//Point is on the left side of the robot
+	zSide := halfAreaWidth - zPos;
+ELSE
+	//Point is on the right side of the robot
+	zSide := zPos - halfAreaWidth;
+END_IF
+
+GetZSide := zSide;]]></ST>
+    </Implementation>
+    <LineIds Name="GetZSide">
+      <LineId Id="11" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

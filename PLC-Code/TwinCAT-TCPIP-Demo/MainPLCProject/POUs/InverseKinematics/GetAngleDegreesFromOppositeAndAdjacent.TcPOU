@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="GetAngleDegreesFromOppositeAndAdjacent" Id="{eec3705b-6ac6-4a87-9523-4de97cae12c7}" SpecialFunc="None">
+    <Declaration><![CDATA[/// Calculates an angle in a right triangle based on the 2 non-hypotenuse sides
+/// Returns the angle, in degrees
+FUNCTION GetAngleDegreesFromOppositeAndAdjacent : LREAL
+VAR_INPUT
+	opposite : LREAL; //the side opposite the angle
+	adjacent : LREAL; //the side next to the angle (not hypotenuse)
+END_VAR
+VAR
+	tangentFraction : LREAL;
+	targetAngleRadians : LREAL;
+	targetAngleDegrees : LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[tangentFraction := opposite / adjacent;
+targetAngleRadians := ATAN(tangentFraction); //No need to worry about which quadrant we are in, as we are working with a right-angle triangle so we can only be in the first one
+targetAngleDegrees := RadiansToDegrees(targetAngleRadians);
+
+GetAngleDegreesFromOppositeAndAdjacent := targetAngleDegrees;]]></ST>
+    </Implementation>
+    <LineIds Name="GetAngleDegreesFromOppositeAndAdjacent">
+      <LineId Id="7" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

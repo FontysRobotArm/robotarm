@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="GetDistanceToPositionFromBase2D" Id="{33e46975-d7ec-4981-bcfc-0cffb29d096e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION GetDistanceToPositionFromBase2D : LREAL
+VAR_INPUT
+	position : Position;	//The target position
+END_VAR
+VAR
+	xSide : LREAL;
+	zSide : LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[xSide := GetXSide(position.x);
+zSide := GetZSide(position.z);
+
+GetDistanceToPositionFromBase2D := GetHypotenuse(xSide, zSide);]]></ST>
+    </Implementation>
+    <LineIds Name="GetDistanceToPositionFromBase2D">
+      <LineId Id="7" Count="0" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="12" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

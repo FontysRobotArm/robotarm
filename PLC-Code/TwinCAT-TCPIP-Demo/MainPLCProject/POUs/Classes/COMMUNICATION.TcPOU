@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="COMMUNICATION" Id="{ace835ab-6df9-403e-9e31-70d285ab16fc}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK COMMUNICATION
+VAR_INPUT
+	
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	m_COMMUNICATION_MODE : COM_MODE;
+	messageCreator : MESSAGE_CREATOR('CRISTART', 'CRIEND', 1);
+	messageHandler : MESSAGE_HANDLER();
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="COMMUNICATION_MODE" Id="{b296671c-fe1c-4ee7-8921-3f13e91d45b3}">
+      <Declaration><![CDATA[PROPERTY PUBLIC COMMUNICATION_MODE : COM_MODE]]></Declaration>
+      <Get Name="Get" Id="{e6a11c6b-47d0-42f4-9fb5-2dd81a4fb2b8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[COMMUNICATION_MODE := m_COMMUNICATION_MODE;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{49c2585b-4772-417f-bad3-17d38100fc36}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[m_COMMUNICATION_MODE := COMMUNICATION_MODE;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="CREATE" Id="{aafc5eb4-35e9-4c88-b5bf-9f7dedabb599}">
+      <Declaration><![CDATA[METHOD PUBLIC CREATE : STRING
+VAR_INPUT
+	COMMAND : STRING;
+	COMMAND_DETAILS : STRING;
+END_VAR
+VAR_OUTPUT
+	ERROR : INT := 0;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (COMMUNICATION_MODE = COM_MODE.Robot) THEN 
+	// creates string for robot when in Robot mode
+	CREATE := MessageCreator.ROBOT_MESSAGE(COMMAND, COMMAND_DETAILS, ERROR => ERROR);
+ELSIF (COMMUNICATION_MODE = COM_MODE.Monarco) THEN 
+	// creates string for monarco when in Monarco mode
+	CREATE := MessageCreator.MONARCO_MESSAGE_CMD(COMMAND_DETAILS, ERROR => ERROR);
+			// JUST THE CMD MONARCO MESSAGE FOR NOW!!
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{5e0bba7a-d59d-4bdc-9140-ea6aebe74734}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	
+	communicationMODE : COM_MODE;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[COMMUNICATION_MODE := communicationMode;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="HANDLE" Id="{e88f222e-5f0f-4f4e-a251-c44dcb49e058}">
+      <Declaration><![CDATA[METHOD PUBLIC HANDLE : INT
+VAR_INPUT
+	FULL_STRING : STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (COMMUNICATION_MODE = COM_MODE.Robot) THEN 
+	// handles string from robot when in Robot mode (RECEIVE_ROBOT())
+	MessageHandler.RECEIVE_ROBOT(FULL_STRING, ERROR => HANDLE);
+ELSIF (COMMUNICATION_MODE = COM_MODE.Monarco) THEN 
+	// handles string from monarco when in Monarco mode (RECEIVE_MONARCO())
+	MessageHandler.RECEIVE_MONARCO(FULL_STRING, ERROR => HANDLE);
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="COMMUNICATION">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="COMMUNICATION.COMMUNICATION_MODE.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="COMMUNICATION.COMMUNICATION_MODE.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="COMMUNICATION.CREATE">
+      <LineId Id="5" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="COMMUNICATION.FB_init">
+      <LineId Id="7" Count="0" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+    <LineIds Name="COMMUNICATION.HANDLE">
+      <LineId Id="6" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,243 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MESSAGE_CREATOR" Id="{5362f2db-b9af-4c33-89b8-51e91db174cd}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK PUBLIC MESSAGE_CREATOR
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	m_START_COMMAND : STRING;
+	m_END_COMMAND : STRING;
+	m_MESSAGE_COUNT : INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="END_COMMAND" Id="{17a77085-99ba-4e5a-a6b0-61d5ecdaaf1d}">
+      <Declaration><![CDATA[PROPERTY PUBLIC END_COMMAND : STRING]]></Declaration>
+      <Get Name="Get" Id="{34f63c59-1787-499b-ae49-8c16ca5e8e1d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[END_COMMAND := m_END_COMMAND;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{5a9ee41b-7800-4672-9f80-c18e76498e69}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[m_END_COMMAND := END_COMMAND;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="FB_init" Id="{83ef42d2-8680-4d10-b85e-9fddeda4d54f}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	
+	STARTcommand : STRING;
+	ENDcommand : STRING;
+	MESSAGEcount : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[START_COMMAND := STARTcommand;
+END_COMMAND := ENDcommand;
+MESSAGE_COUNT := MESSAGEcount;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="MESSAGE_COUNT" Id="{fbb9841c-88d0-4a98-87b4-52c7b8e7169a}">
+      <Declaration><![CDATA[PROPERTY PUBLIC MESSAGE_COUNT : INT]]></Declaration>
+      <Get Name="Get" Id="{c34dbb42-8e54-4d4d-879a-c82857e1e0c8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[MESSAGE_COUNT := m_MESSAGE_COUNT;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{9bc36ed3-1647-4667-8efa-0b12cf6656c6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[m_MESSAGE_COUNT := MESSAGE_COUNT;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="MONARCO_MESSAGE_CMD" Id="{ad1ade02-2485-4f8f-a268-3a4004f6b23d}">
+      <Declaration><![CDATA[METHOD PUBLIC MONARCO_MESSAGE_CMD : STRING
+VAR_INPUT
+	COMMAND_DETAILS : STRING;
+END_VAR
+VAR CONSTANT
+	COMMAND : STRING := 'CMD';
+	SEPARATOR : STRING := ' ';
+END_VAR
+VAR_OUTPUT
+	ERROR : INT := 0;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (COMMAND_DETAILS <> '') THEN // if command_details is not empty, create command string.
+	MONARCO_MESSAGE_CMD := 
+		CONCAT(COMMAND, 
+		CONCAT(SEPARATOR, 
+			COMMAND_DETAILS));
+			
+ELSE // else return error string and error code 1.
+	MONARCO_MESSAGE_CMD := 'ERROR_NoCommandDetailsGiven';
+	ERROR := 1;
+END_IF
+
+//FULL_MONARCO_CMD_MESSAGE := 'CMD TURN_LED_ON';]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MONARCO_MESSAGE_VAR" Id="{75af6ca6-608a-4648-838d-c10621c25dd6}">
+      <Declaration><![CDATA[METHOD PUBLIC MONARCO_MESSAGE_VAR : STRING
+VAR_INPUT
+	VARIABLE_NAME : STRING;
+	VARIABLE_TYPE : STRING;
+	VARIABLE_VALUE : STRING;
+END_VAR
+VAR CONSTANT
+	COMMAND : STRING := 'VAR';
+	SEPARATOR : STRING := ' ';
+END_VAR
+VAR_OUTPUT
+	ERROR : INT := 0;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (VARIABLE_NAME <> '' AND VARIABLE_TYPE <> '' AND VARIABLE_VALUE <> '') THEN 
+	// if all values given, create var string.
+	MONARCO_MESSAGE_VAR := 
+			CONCAT(COMMAND, 
+			CONCAT(SEPARATOR, 
+			CONCAT(VARIABLE_NAME,
+			CONCAT(SEPARATOR, 
+			CONCAT(VARIABLE_TYPE,
+			CONCAT(SEPARATOR, 
+				VARIABLE_VALUE))))));
+				
+ELSE // else return error string, and error code 1.
+	MONARCO_MESSAGE_VAR := 'ERROR_SomeValuesMissing';
+	ERROR := 1;
+END_IF
+
+//FULL_MONARCO_VAR_MESSAGE := 'CMD varName1 INT 9';]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ROBOT_MESSAGE" Id="{430bf570-09f7-45d6-baf1-eaf6dbe02755}">
+      <Declaration><![CDATA[METHOD PUBLIC ROBOT_MESSAGE : T_MaxString
+VAR_INPUT
+	COMMAND : STRING;
+	COMMAND_DETAILS : STRING;
+END_VAR
+VAR_OUTPUT
+	ERROR : INT := 0;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ // CREATES A STRING THAT THE IGUS ROBOT CAN READ AND UNDERSTAND VIA ETHERNET.
+ROBOT_MESSAGE := 
+CONCAT(START_COMMAND, 
+CONCAT(' ', 
+CONCAT(INT_TO_STRING(MESSAGE_COUNT), 
+CONCAT(' ', 
+CONCAT(COMMAND, 
+CONCAT(' ', 
+CONCAT(COMMAND_DETAILS, 
+CONCAT(' ', END_COMMAND))))))));
+
+MESSAGE_COUNT := (MESSAGE_COUNT MOD 9999)+ 1;
+
+//FULL_ROBOT_MESSAGE := 'CRISTART 1 CMD Connect CRIEND';]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="START_COMMAND" Id="{9d6ea5f9-da74-4eed-b881-bd7b30c0595b}">
+      <Declaration><![CDATA[PROPERTY PUBLIC START_COMMAND : STRING]]></Declaration>
+      <Get Name="Get" Id="{0822702b-a4de-4d77-8ad1-afd198250d3d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[START_COMMAND := m_START_COMMAND;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{b07863b0-808e-482c-a2d3-9883c21333b5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[m_START_COMMAND := START_COMMAND;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="MESSAGE_CREATOR">
+      <LineId Id="21" Count="0" />
+    </LineIds>
+    <LineIds Name="MESSAGE_CREATOR.END_COMMAND.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MESSAGE_CREATOR.END_COMMAND.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MESSAGE_CREATOR.FB_init">
+      <LineId Id="21" Count="2" />
+      <LineId Id="17" Count="0" />
+    </LineIds>
+    <LineIds Name="MESSAGE_CREATOR.MESSAGE_COUNT.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MESSAGE_CREATOR.MESSAGE_COUNT.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MESSAGE_CREATOR.MONARCO_MESSAGE_CMD">
+      <LineId Id="14" Count="0" />
+      <LineId Id="11" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="16" Count="2" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="23" Count="0" />
+    </LineIds>
+    <LineIds Name="MESSAGE_CREATOR.MONARCO_MESSAGE_VAR">
+      <LineId Id="20" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="13" Count="6" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="22" Count="1" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="30" Count="0" />
+    </LineIds>
+    <LineIds Name="MESSAGE_CREATOR.ROBOT_MESSAGE">
+      <LineId Id="31" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="22" Count="2" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="27" Count="2" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+    </LineIds>
+    <LineIds Name="MESSAGE_CREATOR.START_COMMAND.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="MESSAGE_CREATOR.START_COMMAND.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

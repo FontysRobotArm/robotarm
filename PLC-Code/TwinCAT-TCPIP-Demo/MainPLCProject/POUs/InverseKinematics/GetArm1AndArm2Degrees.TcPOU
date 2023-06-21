@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="GetArm1AndArm2Degrees" Id="{ca1c0938-90e8-458f-a58c-4321c0f2ea92}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION GetArm1AndArm2Degrees : BOOL
+VAR_INPUT
+	position : Position;
+END_VAR
+VAR_OUTPUT
+	arm1Degrees : LREAL;
+	arm2Degrees : LREAL;
+END_VAR
+VAR
+	actualY : LREAL;
+	
+	oppositeSide : LREAL;
+	adjacentSide : LREAL;
+	baseTriangleHypotenuse : LREAL;
+	angleDegreesFromBaseToActualY : LREAL;
+	
+	armTriangleBase : LREAL;
+	armTriangleA : LREAL;
+	armTriangleB : LREAL;
+	
+	arm1AngleDegreesRelativeToBaseTriangle : LREAL;
+	arm2DegreesRelativeArm1 : LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[actualY := position.y - GVL_RobotArmConstants.ARM_BASE_HEIGHT + GVL_RobotArmConstants.ARM_3_LENGTH + GVL_RobotArmConstants.GRABBER_HEIGHT;
+
+IF (actualY < 0) THEN
+	arm1Degrees := 0;
+	arm2Degrees := 0;
+	GetArm1AndArm2Degrees := FALSE;
+	RETURN;
+END_IF
+
+oppositeSide := actualY;
+adjacentSide := GetDistanceToPositionFromBase2D(position);
+baseTriangleHypotenuse := GetHypotenuse(oppositeSide, adjacentSide);
+angleDegreesFrombaseToActualY := GetAngleDegreesFromOppositeAndAdjacent(oppositeSide, adjacentSide);
+
+armTriangleBase := baseTriangleHypotenuse;
+armTriangleA := GVL_RobotArmConstants.ARM_1_LENGTH;
+armTriangleB := GVL_RobotArmConstants.ARM_2_LENGTH;
+
+arm1AngleDegreesRelativeToBaseTriangle := GetAngleDegreesFrom3Sides(armTriangleA, armTriangleB, armTriangleBase);
+arm1Degrees := (angleDegreesFromBaseToActualY + arm1AngleDegreesRelativeToBaseTriangle) - 90;
+
+arm2DegreesRelativeArm1 := GetAngleDegreesFrom3Sides(armTriangleB, armTriangleBase, armTriangleA);
+arm2Degrees := arm2DegreesRelativeArm1 - 90;]]></ST>
+    </Implementation>
+    <LineIds Name="GetArm1AndArm2Degrees">
+      <LineId Id="7" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="18" Count="2" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="39" Count="1" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="30" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
