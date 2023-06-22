@@ -1,4 +1,4 @@
-# Projet Requirements
+# Project Requirements
 
 1. Communication via CAN Open
     - Send coordinates for the robot arm to move to
