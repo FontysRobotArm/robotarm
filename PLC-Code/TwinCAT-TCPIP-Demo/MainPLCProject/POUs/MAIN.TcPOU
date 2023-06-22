@@ -62,7 +62,7 @@ VAR
 	LocalSystemTime : FB_LocalSystemTime;
 	
 	// COMMUNICATION message handling
-	MessageBase : COMMUNICATION(CommunicationMODE := COM_MODE.Monarco); // change this to switch between robot and monarco mode!!
+	MessageBase : COMMUNICATION(CommunicationMODE := COM_MODE.Robot); // change this to switch between robot and monarco mode!!
 	messageHandler : MESSAGE_HANDLER();
 	MessageERROR : int := 0;
 	//
@@ -125,7 +125,16 @@ HandleHeartbeat();
 armMovementHandler();
 
 // === Socket client ====
-client(totalMessagesReceived => totalMessagesFromServerCount);]]></ST>
+client(totalMessagesReceived => totalMessagesFromServerCount);
+
+
+
+IF (GVL.robotData.isAtDefaultPosition = TRUE) THEN
+	GVL.robotData.isAtDefaultPositionInt := 1;
+ELSE
+	GVL.robotData.isAtDefaultPositionInt := 0;
+	
+END_IF]]></ST>
     </Implementation>
     <Method Name="HandleHeartbeat" Id="{10805174-f1a2-4535-adc3-cbcd0f1db6e9}">
       <Declaration><![CDATA[METHOD PRIVATE HandleHeartbeat : BOOL
@@ -335,16 +344,16 @@ END_IF
 
 IF (connectTrigger.Q) THEN
 	//Note: Not sure if this is a good idea, as it is burried in the code and can lead to unexpected behaviour
-//	CASE MessageBase.COMMUNICATION_MODE OF
-//	// check for communication mode and set IP for this mode.
-//		COM_MODE.Robot:
-//			client.RemoteServerAddress := ROBOT_IP;
-//			client.RemoteServerPort := ROBOT_PORT;
+	CASE MessageBase.COMMUNICATION_MODE OF
+	// check for communication mode and set IP for this mode.
+		COM_MODE.Robot:
+			client.RemoteServerAddress := ROBOT_IP;
+			client.RemoteServerPort := ROBOT_PORT;
 		
-//		COM_MODE.Monarco:
-//			client.RemoteServerAddress := MONARCO_IP;
-//			client.RemoteServerPort := MONARCO_PORT;
-//	END_CASE
+		COM_MODE.Monarco:
+			client.RemoteServerAddress := MONARCO_IP;
+			client.RemoteServerPort := MONARCO_PORT;
+	END_CASE
 	client.BindReceiveMessage(variableToBind := messageFromServer);
 	client.Enable();
 END_IF
@@ -361,6 +370,11 @@ END_IF]]></ST>
       <LineId Id="2411" Count="4" />
       <LineId Id="2420" Count="13" />
       <LineId Id="729" Count="0" />
+      <LineId Id="2538" Count="2" />
+      <LineId Id="2537" Count="0" />
+      <LineId Id="2543" Count="1" />
+      <LineId Id="2546" Count="0" />
+      <LineId Id="2541" Count="1" />
     </LineIds>
     <LineIds Name="MAIN.HandleHeartbeat">
       <LineId Id="6" Count="5" />

@@ -10,7 +10,9 @@ STRUCT
 	isBusy : ARRAY[0..4] OF BOOL;	//Global value for all joints
 	
 	hasNewData : BOOL := FALSE;
-	isAtDefaultPosition : BOOL;	//TODO: Implement in PLC
+	isAtDefaultPosition : BOOL := FALSE;	
+	isAtDefaultPositionInt : INT := 0;		
+	hasPickedUp : INT	:= 0;
 	
 	joint0 : Joint;
 	joint1 : Joint;

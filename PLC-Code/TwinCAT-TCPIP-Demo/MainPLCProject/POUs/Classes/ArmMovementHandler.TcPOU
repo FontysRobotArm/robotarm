@@ -36,6 +36,7 @@ CASE m_currentMovementState OF
 			//Set target to default
 			m_robotDataHandler.TO_ZERO();
 			m_robotDataHandler.MOVEMENT_CONTROLLER();	//Put into all on-entry code to ensure the isBusy variables are properly updated
+			GVL.robotData.hasPickedUp := 1;
 		END_IF
 		
 		m_prevMovementState := m_currentMovementState;
@@ -171,7 +172,7 @@ END_IF]]></ST>
       <LineId Id="23" Count="1" />
       <LineId Id="49" Count="0" />
       <LineId Id="125" Count="0" />
-      <LineId Id="25" Count="0" />
+      <LineId Id="142" Count="1" />
       <LineId Id="48" Count="0" />
       <LineId Id="26" Count="5" />
       <LineId Id="14" Count="2" />
