@@ -178,3 +178,17 @@ Dimitar: -<br>
 Luuk: -<br>
 Rik: -<br>
 Jorn: -<br>
+
+## 21.06.2023
+As group: full integration, and documentation<br>
+Dimitar: -<br>
+Luuk: -<br>
+Rik: -<br>
+Jorn: -<br>
+
+## 22.06.2023
+As group: full integration, and documentation<br>
+Dimitar: -<br>
+Luuk: -<br>
+Rik: -<br>
+Jorn: -<br>
